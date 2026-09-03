@@ -16,6 +16,8 @@ import FormSearchableSelect from "./fields/FormSearchableSelect";
 import FormCheckbox from "./fields/FormCheckbox";
 import FormRadio from "./fields/FormRadio";
 import FormSwitch from "./fields/FormSwitch";
+import FormFileUpload from "./fields/FormFileUpload";
+import FormFileUploadMultiple from "./fields/FormFileUploadMultiple";
 
 // Actions
 import FormSubmit from "./actions/FormSubmit";
@@ -48,6 +50,8 @@ export {
   FormCheckbox,
   FormRadio,
   FormSwitch,
+  FormFileUpload,
+  FormFileUploadMultiple,
 
   // Actions
   FormSubmit,

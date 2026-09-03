@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useRef, useEffect, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import TimePicker from "./TimePicker";

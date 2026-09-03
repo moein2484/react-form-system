@@ -146,6 +146,8 @@ export default function Example() {
 | 10 | `FormRadio` | گزینه‌های رادیویی |
 | 11 | `FormCheckbox` | باکس تایید (boolean) |
 | 12 | `FormSwitch` | سوییچ (boolean) |
+| 13 | `FormFileUpload` | آپلود فایل تکی (درگ‌اند‌دراپ) |
+| 14 | `FormFileUploadMultiple` | آپلود چند فایل هم‌زمان (درگ‌اند‌دراپ) |
 
 ---
 
@@ -352,6 +354,54 @@ export default function Example() {
 ### 12) FormSwitch
 
 سوییچ روشن/خاموش — مقدار فیلد `boolean` است.
+
+### 13) FormFileUpload (آپلود فایل تکی)
+
+باکس درگ‌اند‌دراپ برای افزودن **یک** فایل. مقدار فیلد یک شیء `File` است.
+
+| پراپ | نوع | پیش‌فرض | توضیح |
+|------|-----|---------|-------|
+| `required` | `boolean` | `false` | الزامی بودن انتخاب فایل |
+| `requiredMessage` | `string` | `"این فیلد الزامی است"` | پیام خطای الزامی بودن |
+| `accept` | `string` | – | پسوند/نوع مجاز (مثل `".pdf,.png"` یا `"image/*"`) |
+| `acceptMessage` | `string` | `"نوع فایل مجاز نیست"` | پیام خطای نوع فایل |
+| `maxSize` | `number` | – | حداکثر حجم فایل (بایت) |
+| `maxSizeMessage` | `string` | – | پیام خطای حداکثر حجم |
+| `minSize` | `number` | – | حداقل حجم فایل (بایت) |
+| `minSizeMessage` | `string` | – | پیام خطای حداقل حجم |
+| `disabled` | `boolean` | `false` | غیرفعال کردن باکس |
+| `dragText`/`dragHint`/`browseText` | `string` | – | متن‌های سفارشی باکس |
+| `renderItem` | `(file, index) => ReactNode` | – | رندر سفارشی هر فایل در لیست |
+
+```jsx
+<FormFileUpload
+  name="document"
+  label="سند"
+  required
+  requiredMessage="انتخاب فایل الزامی است"
+  accept=".pdf,.jpg,.png"
+  acceptMessage="فقط فایل PDF یا تصویر مجاز است"
+  maxSize={2 * 1024 * 1024}
+  maxSizeMessage="حجم فایل حداکثر ۲ مگابایت"
+/>
+```
+
+### 14) FormFileUploadMultiple (آپلود چند فایل)
+
+مانند `FormFileUpload` ولی `multiple` فعال است و چند فایل هم‌زمان پذیرفته می‌شود. مقدار فیلد یک **آرایه‌ی `File`** است و برای تصاویر پیش‌نمایش و دکمه حذف هر آیتم نمایش داده می‌شود.
+
+```jsx
+<FormFileUploadMultiple
+  name="images"
+  label="تصاویر"
+  accept="image/*"
+  acceptMessage="فقط تصویر مجاز است"
+  maxSize={5 * 1024 * 1024}
+  maxSizeMessage="حجم هر تصویر حداکثر ۵ مگابایت"
+/>
+```
+
+> نکته: هر دو کامپوننت مقدار `File`/`File[]` واقعی را ذخیره می‌کنند. برای ارسال به سرور، `File` را مستقیم در `FormData` قرار دهید یا قبل از submit به Base64 تبدیل کنید.
 
 ---
 

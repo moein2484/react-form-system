@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react";
 
 export function useTimePicker(initialTime = "08:00") {

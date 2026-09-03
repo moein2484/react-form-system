@@ -1,3 +1,5 @@
+"use client"
+
 import { motion } from "framer-motion";
 import TimeColumn from "./TimeColumn";
 import ActionButtons from "./ActionButtons";

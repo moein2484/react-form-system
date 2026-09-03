@@ -15,6 +15,8 @@ import {
   FormCheckbox,
   FormRadio,
   FormSwitch,
+  FormFileUpload,
+  FormFileUploadMultiple,
   FormActions,
 } from "../component/myForm";
 import styles from "./FormDemos.module.css";
@@ -463,9 +465,55 @@ export default function FormDemos() {
         </Form>
       </FormCard>
 
+      {/* ====== آپلود فایل (تکی) ====== */}
+      <FormCard
+        title="۱۷) FormFileUpload (تکی)"
+        description='باکس درگ‌اند‌دراپ برای افزودن یک فایل — با validation حجم و نوع فایل'
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("FileUpload")}
+          defaultValues={{ document: null }}
+        >
+          <FormFileUpload
+            name="document"
+            label="سند (فقط تا ۲ مگابایت)"
+            required
+            requiredMessage="انتخاب فایل الزامی است"
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+            acceptMessage="فقط فایل PDF یا مصور مجاز است"
+            maxSize={2 * 1024 * 1024}
+            maxSizeMessage="حجم فایل نباید بیشتر از ۲ مگابایت باشد"
+          />
+          <FormActions submitText="ثبت فایل" />
+        </Form>
+      </FormCard>
+
+      {/* ====== آپلود چند فایل ====== */}
+      <FormCard
+        title="۱۸) FormFileUploadMultiple (چندتایی)"
+        description='درگ‌اند‌دراپ چند فایل به‌صورت همزمان — با پیش‌نمایش تصویر و امکان حذف'
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("FileUploadMultiple")}
+          defaultValues={{ images: [] }}
+        >
+          <FormFileUploadMultiple
+            name="images"
+            label="تصاویر (چند انتخابی)"
+            accept="image/*"
+            acceptMessage="فقط تصویر مجاز است"
+            maxSize={5 * 1024 * 1024}
+            maxSizeMessage="حجم هر تصویر نباید بیشتر از ۵ مگابایت باشد"
+          />
+          <FormActions submitText="ثبت تصاویر" />
+        </Form>
+      </FormCard>
+
       {/* ====== تست اسکرول خودکار ====== */}
       <FormCard
-        title="۱۷) تست اسکرول خودکار به اولین خطا"
+        title="۱۹) تست اسکرول خودکار به اولین خطا"
         description="چند فیلد الزامی خالی بگذارید و Submit بزنید — در حالت Normal باید به اولین فیلد خالی اسکرول کند"
       >
         <Form

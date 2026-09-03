@@ -1,0 +1,270 @@
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 28px 16px;
+  border: 2px dashed var(--form-border, #b0bec5);
+  border-radius: var(--form-radius, 12px);
+  background: var(--form-upload-bg, #fafbfc);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dropzone:hover {
+  border-color: var(--form-primary, #1976d2);
+  background: var(--form-primary-light, #e3f2fd);
+}
+
+.dropzone.dragging {
+  border-color: var(--form-primary, #1976d2);
+  background: var(--form-primary-light, #e3f2fd);
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.12);
+}
+
+.dropzone.disabled {
+  background: var(--form-disabled-bg, #f5f5f5);
+  border-color: var(--form-border, #e0e0e0);
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.dropzone.error {
+  border-color: var(--form-error, #d32f2f);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--form-primary-light, #e3f2fd);
+  color: var(--form-primary, #1976d2);
+}
+
+.dragText {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.dragHint {
+  font-size: 0.75rem;
+  color: var(--form-placeholder, #9e9e9e);
+}
+
+.browseText {
+  color: var(--form-primary, #1976d2);
+  font-weight: 700;
+}
+
+/* ---------- لیست فایل‌های انتخاب‌شده ---------- */
+.fileList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--form-border, #e0e0e0);
+  border-radius: 8px;
+  background: white;
+  direction: rtl;
+}
+
+.fileItem.uploading {
+  border-color: var(--form-border-hover, #b0bec5);
+  background: #fbfdff;
+}
+
+.fileItem.uploaded {
+  border-color: #c8e6c9;
+  background: #f6fdf7;
+}
+
+.fileIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--form-primary, #1976d2);
+}
+
+.fileInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.fileName {
+  font-size: 0.8rem;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fileNameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fileMeta {
+  font-size: 0.7rem;
+  color: var(--form-placeholder, #9e9e9e);
+}
+
+.statusText {
+  font-size: 0.7rem;
+  color: var(--form-primary, #1976d2);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.statusText.done {
+  color: var(--form-success, #2e7d32);
+}
+
+.removeBtn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--form-error, #d32f2f);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.removeBtn:hover {
+  background: rgba(211, 47, 47, 0.1);
+}
+
+.removeBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* ---------- پیش‌نمایش تصویر ---------- */
+.previewWrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--form-border, #e0e0e0);
+}
+
+.previewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------- ایکون نوع فایل ---------- */
+.typeIcon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 8px;
+}
+
+.typeIcon svg {
+  margin-bottom: 4px;
+}
+
+.typeIcon.pdf {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.typeIcon.word {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.typeIcon.excel {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.typeIcon.image {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+.typeIcon.zip {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.typeIcon.text {
+  background: #eceff1;
+  color: #37474f;
+}
+
+.typeIcon.default {
+  background: #eceff1;
+  color: #546e7a;
+}
+
+.typeBadge {
+  margin-top: -8px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ---------- اسپینر لودینگ ---------- */
+.spinner {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border: 2px solid rgba(25, 118, 210, 0.2);
+  border-top-color: var(--form-primary, #1976d2);
+  border-radius: 50%;
+  animation: fileUploadSpin 0.7s linear infinite;
+}
+
+.spinnerInIcon {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+.successCheck {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: var(--form-success, #2e7d32);
+}
+
+@keyframes fileUploadSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
