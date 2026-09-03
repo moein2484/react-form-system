@@ -157,12 +157,37 @@ export default function Example() {
 |------|-----|-------|
 | `name` | `string` (الزامی) | نام فیلد در فرم |
 | `label` | `string` | عنوان نمایشی |
+| `labelShort` | `string` | عنوانِ کوتاه که به‌جای یک خطِ مجزا، داخل outline اینپوت (سمت راست) قرار می‌گیرد — حالت «inline». وقتی تنظیم شود، `label` نادیده گرفته می‌شود |
 | `placeholder` | `string` | متن راهنمای داخل اینپوت |
 | `required` | `boolean` | الزامی بودن فیلد |
 | `requiredMessage` | `string` | پیام خطای الزامی بودن |
 | `validate` | `(value) => true \| string` | تابع اعتبارسنجی سفارشی |
 | `disabled` | `boolean` | غیرفعال بودن |
 | `className` | `string` | کلاس سفارشی |
+
+### حالت لیبل short (`labelShort`)
+
+همه اینپوت‌های مبتنی بر جعبه‌نوشتند (text/number/email/password/currency/percentage/date/time/select) از پراپ `labelShort` پشتیبانی می‌کنند. در این حالت، عنوانِ کوتاه به‌جای خطِ جداگانه، به‌صورت یک برچسبِ inline در سمت راستِ داخل	outline اینپوت نمایش داده می‌شود (با پس‌زمینه‌ی آبیِ کمرنگ). اگر `labelShort` را تنظیم نکنید یا نادیده بگیرید (`undefined`)، همان رفتار قبلی (لیبلِ خط‌به‌خط) برقرار است.
+
+```jsx
+<FormInput
+  name="name"
+  label="اسم کامل"     // نادیده گرفته می‌شود وقتی labelShort داده می‌شود
+  labelShort="نام"
+  placeholder="نام را وارد کنید"
+  required
+/>
+<FormSelect
+  name="city"
+  labelShort="شهر"
+  searchable
+  options={cities}
+  valueKey="id"
+  labelKey="name"
+/>
+```
+
+فقط `FormRadio`، `FormCheckbox` و `FormSwitch` به‌صورت block باقی مانده‌اند و هنوز از `labelShort` پشتیبانی نمی‌کنند (در این کامپوننت‌ها از `label` استفاده کنید).
 
 همه فیلدها از `react-hook-form` استفاده می‌کنند و باید داخل `<Form>` باشند در غیر این صورت خطا می‌دهند.
 

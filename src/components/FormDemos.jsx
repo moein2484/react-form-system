@@ -241,7 +241,7 @@ export default function FormDemos() {
         <Form type={formType} onSubmit={logSubmit("Avatar")} defaultValues={{ user: "" }}>
           <FormSelect
             name="user"
-            label="انتخاب کاربر"
+            labelShort="انتخاب کاربر"
             placeholder="کاربر را انتخاب کنید"
             required
             requiredMessage="کاربر الزامی است"
@@ -274,7 +274,7 @@ export default function FormDemos() {
         <Form type={formType} onSubmit={logSubmit("Number")} defaultValues={{ age: 18 }}>
           <FormNumber
             name="age"
-            label="سن"
+            labelShort="سن"
             placeholder="سن را وارد کنید"
             required
             min={18}
@@ -288,7 +288,7 @@ export default function FormDemos() {
         <Form type={formType} onSubmit={logSubmit("Email")} defaultValues={{ email: "" }}>
           <FormEmail
             name="email"
-            label="ایمیل"
+            labelShort="ایمیل"
             placeholder="example@test.com"
             required
             emailMessage="ایمیل معتبر نیست"
@@ -329,6 +329,79 @@ export default function FormDemos() {
         <Form type={formType} onSubmit={logSubmit("Percentage")} defaultValues={{ percentage: 50 }}>
           <FormPercentage name="percentage" label="درصد" placeholder="درصد را وارد کنید" required />
           <FormActions submitText="ثبت FormPercentage" />
+        </Form>
+      </FormCard>
+
+      {/* ====== حالت لیبل short (لیبل داخل outline) ====== */}
+      <FormCard
+        title="۱۱) حالت لیبل short — labelShort"
+        description="با پراپ labelShort، لیبلِ کوتاه به‌جای خطِ جدا، داخل outline اینپوت (سمت راست) قرار می‌گیرد"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("LabelShort")}
+          defaultValues={{
+            lsName: "",
+            lsAge: 25,
+            lsPrice: 500000,
+            lsPercent: 30,
+            lsDate: "",
+            lsTime: "09:00",
+            lsCity: "",
+          }}
+        >
+          <FormInput
+            name="lsName"
+            labelShort="نام"
+            placeholder="نام را وارد کنید"
+            required
+            requiredMessage="نام الزامی است"
+          />
+          <FormNumber
+            name="lsAge"
+            labelShort="سن"
+            placeholder="سن را وارد کنید"
+            required
+            min={18}
+            minMessage="سن باید حداقل ۱۸ باشد"
+          />
+          <FormCurrency
+            name="lsPrice"
+            labelShort="مبلغ"
+            placeholder="مبلغ را وارد کنید"
+            required
+          />
+          <FormPercentage
+            name="lsPercent"
+            labelShort="درصد"
+            placeholder="درصد را وارد کنید"
+            required
+          />
+          <FormDate
+            name="lsDate"
+            labelShort="تاریخ"
+            placeholder="تاریخ را انتخاب کنید"
+            required
+            requiredMessage="تاریخ الزامی است"
+          />
+          <FormTime
+            name="lsTime"
+            labelShort="ساعت"
+            required
+            requiredMessage="ساعت الزامی است"
+          />
+          <FormSelect
+            name="lsCity"
+            labelShort="شهر"
+            placeholder="شهر را انتخاب کنید"
+            required
+            requiredMessage="شهر الزامی است"
+            searchable
+            options={cityOptions}
+            valueKey="id"
+            labelKey="name"
+          />
+          <FormActions submitText="ثبت فرم با labelShort" />
         </Form>
       </FormCard>
 

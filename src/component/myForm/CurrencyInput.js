@@ -17,8 +17,11 @@ export default function CurrencyInput({
   value,
   onChange,
   label,
+  labelShort,
   placeholder,
   disabled,
+  inlineLabel,
+  required,
   ...rest
 }) {
   const raw = stripNonDigits(value);
@@ -57,18 +60,38 @@ export default function CurrencyInput({
 
   return (
     <div className={styles.container}>
-      {label && <label className={styles.label}>{label}</label>}
-      <input
-        type="text"
-        className={styles.input}
-        value={display}
-        onChange={handleChange}
-        placeholder={placeholder}
-        disabled={disabled}
-        inputMode="numeric"
-        dir="ltr"
-        {...rest}
-      />
+      {label && !inlineLabel && <label className={styles.label}>{label}</label>}
+      {inlineLabel ? (
+        <div className={`${styles.inlineWrap} ${disabled ? styles.disabled : ""}`}>
+          <span className={styles.inlineLabel}>
+            {inlineLabel}
+            {required && <span className={styles.inlineRequiredMark}>*</span>}
+          </span>
+          <input
+            type="text"
+            className={styles.inputInline}
+            value={display}
+            onChange={handleChange}
+            placeholder={placeholder}
+            disabled={disabled}
+            inputMode="numeric"
+            dir="ltr"
+            {...rest}
+          />
+        </div>
+      ) : (
+        <input
+          type="text"
+          className={styles.input}
+          value={display}
+          onChange={handleChange}
+          placeholder={placeholder}
+          disabled={disabled}
+          inputMode="numeric"
+          dir="ltr"
+          {...rest}
+        />
+      )}
     </div>
   );
 }

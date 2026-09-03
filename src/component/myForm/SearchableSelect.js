@@ -39,6 +39,8 @@ export default function SearchableSelect({
   onAddItem,
   multiple = false,
   renderChip,
+  inlineLabel,
+  required,
 }) {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -120,14 +122,23 @@ export default function SearchableSelect({
 
   return (
     <div className={styles.formControl}>
-      <div
-        ref={selectRef}
-        className={`${styles.selectContainer} ${
-          disabled ? styles.disabled : ""
-        } ${isOpen ? styles.selectOpen : ""}`}
-        onClick={handleSelectClick}
-        data-empty={isEmpty ? "true" : "false"}
-      >
+      <div className={inlineLabel ? styles.inlineWrap : undefined}>
+        {inlineLabel && (
+          <span className={styles.inlineLabel}>
+            {inlineLabel}
+            {required && <span className={styles.inlineRequiredMark}>*</span>}
+          </span>
+        )}
+        <div
+          ref={selectRef}
+          className={`${styles.selectContainer} ${
+            disabled ? styles.disabled : ""
+          } ${isOpen ? styles.selectOpen : ""} ${
+            inlineLabel ? styles.selectInline : ""
+          }`}
+          onClick={handleSelectClick}
+          data-empty={isEmpty ? "true" : "false"}
+        >
         {isEmpty && (
           <span className={styles.placeholderText}>
             {loading ? loadingText : placeholder}
@@ -189,6 +200,7 @@ export default function SearchableSelect({
         )}
 
         <ArrowIcon open={isOpen} />
+      </div>
       </div>
 
       {isOpen && (

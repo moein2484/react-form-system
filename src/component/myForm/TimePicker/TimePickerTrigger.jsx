@@ -6,7 +6,7 @@ import styles from "./TimePickerTrigger.module.css";
 const toPersianDigits = (str) =>
   String(str).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[parseInt(d)]);
 
-export default function TimePickerTrigger({ value, onChange, type, disabled }) {
+export default function TimePickerTrigger({ value, onChange, type, disabled, inlineLabel, required }) {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [position, setPosition] = useState({ top: 0, left: 0 });
@@ -65,14 +65,22 @@ export default function TimePickerTrigger({ value, onChange, type, disabled }) {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={handleOpen}
-        disabled={disabled}
-        className={`${styles.button} ${type === "meeting" ? styles.meetingButton : ""} ${disabled ? styles.disabled : ""}`}
-      >
-        {toPersianDigits(value)}
-      </button>
+      <div className={inlineLabel ? styles.inlineWrap : styles.triggerWrap}>
+        {inlineLabel && (
+          <span className={styles.inlineLabel}>
+            {inlineLabel}
+            {required && <span className={styles.inlineRequiredMark}>*</span>}
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={handleOpen}
+          disabled={disabled}
+          className={`${styles.button} ${type === "meeting" ? styles.meetingButton : ""} ${disabled ? styles.disabled : ""} ${inlineLabel ? styles.buttonInline : ""}`}
+        >
+          {toPersianDigits(value)}
+        </button>
+      </div>
 
       {open && (
         <div

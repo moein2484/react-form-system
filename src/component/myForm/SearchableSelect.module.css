@@ -3,6 +3,49 @@
   position: relative;
 }
 
+/* ---------- حالت فرم inline (لیبل داخل outline) ---------- */
+.inlineWrap {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--form-border, #e0e0e0);
+  border-radius: var(--form-radius, 10px);
+  background: white;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inlineWrap:focus-within {
+  border-color: var(--form-primary, #1976d2);
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.12);
+}
+
+.inlineLabel {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--form-primary, #1976d2);
+  background: var(--form-primary-light, #e3f2fd);
+  border-right: 1px solid var(--form-border, #e0e0e0);
+  white-space: nowrap;
+}
+
+.inlineRequiredMark {
+  color: var(--form-error, #d32f2f);
+  margin-right: 2px;
+}
+
+.selectInline {
+  flex: 1;
+  min-width: 0;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  min-height: 0;
+}
+
 /* ---------- ظاهر اصلی سلکت ---------- */
 .selectContainer {
   min-height: 42px;

@@ -9,6 +9,7 @@ import styles from "./Field.module.css";
 export default function FormTime({
   name,
   label,
+  labelShort,
   placeholder,
   required = false,
   requiredMessage = "این فیلد الزامی است",
@@ -33,6 +34,9 @@ export default function FormTime({
     rules.validate = validate;
   }
 
+  const title = labelShort || label;
+  const inline = Boolean(labelShort);
+
   return (
     <Controller
       name={name}
@@ -40,9 +44,9 @@ export default function FormTime({
       rules={rules}
       render={({ field, fieldState }) => (
         <div className={styles.fieldContainer} data-form-field={name}>
-          {label && (
+          {title && !inline && (
             <label className={styles.label}>
-              {label}
+              {title}
               {required && <span className={styles.required}>*</span>}
             </label>
           )}
@@ -50,6 +54,8 @@ export default function FormTime({
             value={field.value || "08:00"}
             onChange={field.onChange}
             disabled={disabled}
+            inlineLabel={inline ? title : undefined}
+            required={required}
             {...rest}
           />
           {fieldState.error && (

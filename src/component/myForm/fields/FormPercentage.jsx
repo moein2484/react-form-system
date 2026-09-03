@@ -7,6 +7,7 @@ import styles from "./Field.module.css";
 export default function FormPercentage({
   name,
   label,
+  labelShort,
   placeholder,
   required = false,
   requiredMessage = "این فیلد الزامی است",
@@ -50,6 +51,9 @@ export default function FormPercentage({
     rules.validate = validate;
   }
 
+  const title = labelShort || label;
+  const inline = Boolean(labelShort);
+
   return (
     <Controller
       name={name}
@@ -57,27 +61,51 @@ export default function FormPercentage({
       rules={rules}
       render={({ field, fieldState }) => (
         <div className={styles.fieldContainer} data-form-field={name}>
-          {label && (
+          {title && !inline && (
             <label className={styles.label}>
-              {label}
+              {title}
               {required && <span className={styles.required}>*</span>}
             </label>
           )}
-          <div className={styles.percentageContainer}>
-            <input
-              {...field}
-              type="number"
-              placeholder={placeholder}
-              disabled={disabled}
-              min={min}
-              max={max}
-              step={step}
-              onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-              className={`${styles.input} ${fieldState.error ? styles.error : ""} ${className || ""}`}
-              {...rest}
-            />
-            <span className={styles.percentageSymbol}>%</span>
-          </div>
+          {inline ? (
+            <div className={`${styles.inlineWrap} ${disabled ? styles.disabled : ""}`}>
+              {title && (
+                <span className={styles.inlineLabel}>
+                  {title}
+                  {required && <span className={styles.inlineRequiredMark}>*</span>}
+                </span>
+              )}
+              <input
+                {...field}
+                type="number"
+                placeholder={placeholder}
+                disabled={disabled}
+                min={min}
+                max={max}
+                step={step}
+                onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                className={`${styles.inputInline} ${fieldState.error ? styles.error : ""} ${className || ""}`}
+                {...rest}
+              />
+              <span className={styles.inlineSymbol}>%</span>
+            </div>
+          ) : (
+            <div className={styles.percentageContainer}>
+              <input
+                {...field}
+                type="number"
+                placeholder={placeholder}
+                disabled={disabled}
+                min={min}
+                max={max}
+                step={step}
+                onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                className={`${styles.input} ${fieldState.error ? styles.error : ""} ${className || ""}`}
+                {...rest}
+              />
+              <span className={styles.percentageSymbol}>%</span>
+            </div>
+          )}
           {fieldState.error && (
             <span className={styles.errorMessage}>{fieldState.error.message}</span>
           )}

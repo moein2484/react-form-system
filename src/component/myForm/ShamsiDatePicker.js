@@ -13,10 +13,13 @@ const ShamsiDatePicker = forwardRef(
       value,
       onChange,
       label,
+      labelShort,
       placeholder = "انتخاب تاریخ",
       error,
       fullWidth = true,
       size = "small",
+      inlineLabel,
+      required,
       ...rest
     },
     ref,
@@ -39,33 +42,48 @@ const ShamsiDatePicker = forwardRef(
       ? new DateObject({ date: value, calendar: gregorian, format: "YYYY-MM-DD" })
       : null;
 
+    const labelText = inlineLabel || labelShort || label;
+    const paddingRight = labelText && !(inlineLabel || labelShort) && label ? "0 12px" : (inlineLabel || labelShort) ? "0 12px 0 12px" : "0 12px";
+
     return (
       <div className={fullWidth ? styles.fullWidth : ""}>
-        {label && <label className={styles.label}>{label}</label>}
-        <DatePicker
-          ref={ref}
-          calendar={persian}
-          locale={persian_fa}
-          value={dateValue}
-          onChange={handleChange}
-          placeholder={placeholder}
-          calendarPosition="bottom-right"
-          format="YYYY/MM/DD"
-          containerClassName="shamsi-datepicker-container"
-          inputClass={`shamsi-datepicker-input${error ? " shamsi-datepicker-error" : ""}`}
-          style={{
-            width: "100%",
-            height: size === "small" ? 40 : 48,
-            borderRadius: "10px",
-            border: `1px solid ${error ? "#d32f2f" : "#e0e0e0"}`,
-            padding: "0 12px",
-            fontSize: "0.85rem",
-            fontFamily: "var(--font-fa)",
-            outline: "none",
-            boxSizing: "border-box",
-          }}
-          {...rest}
-        />
+        {labelText && !inlineLabel && !labelShort && (
+          <label className={styles.label}>{labelText}</label>
+        )}
+        <div className={inlineLabel || labelShort ? styles.inlineWrap : undefined}>
+          {(inlineLabel || labelShort) && (
+            <span className={styles.inlineLabel}>
+              {labelText}
+              {required && <span className={styles.inlineRequiredMark}>*</span>}
+            </span>
+          )}
+          <div className={styles.dateInputWrap}>
+            <DatePicker
+              ref={ref}
+              calendar={persian}
+              locale={persian_fa}
+              value={dateValue}
+              onChange={handleChange}
+              placeholder={placeholder}
+              calendarPosition="bottom-right"
+              format="YYYY/MM/DD"
+              containerClassName="shamsi-datepicker-container"
+              inputClass={`shamsi-datepicker-input${error ? " shamsi-datepicker-error" : ""}`}
+              style={{
+                width: "100%",
+                height: size === "small" ? 40 : 48,
+                borderRadius: "10px",
+                border: "none",
+                padding: (inlineLabel || labelShort) ? "0 12px 0 12px" : "0 12px",
+                fontSize: "0.85rem",
+                fontFamily: "var(--font-fa)",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+              {...rest}
+            />
+          </div>
+        </div>
       </div>
     );
   },
