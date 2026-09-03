@@ -3,157 +3,264 @@
   position: relative;
 }
 
+/* ---------- ظاهر اصلی سلکت ---------- */
 .selectContainer {
-  min-height: 40px;
-  border-radius: 9px;
+  min-height: 42px;
+  border-radius: var(--form-radius, 10px);
   background-color: white;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   direction: rtl;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--form-border, #e0e0e0);
   cursor: pointer;
   position: relative;
   display: flex;
   align-items: center;
-  padding: 8px 11px;
+  padding: 8px 12px;
+  gap: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .selectContainer:hover {
-  border-color: #9e9e9e;
+  border-color: var(--form-border-hover, #b0bec5);
 }
 
-.selectContainer:focus-within {
-  border-color: #1976d2;
-  border-width: 1px;
-  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+.selectContainer:focus-within,
+.selectContainer.selectOpen {
+  border-color: var(--form-primary, #1976d2);
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
 }
 
 .selectContainer.disabled {
-  background-color: #f5f5f5;
+  background-color: var(--form-disabled-bg, #f5f5f5);
   cursor: not-allowed;
+  opacity: 0.75;
 }
 
-.placeholderLabel {
-  position: absolute;
-  right: 11px;
-  top: 50%;
-  transform: translateY(-50%);
-  transform-origin: top right;
-  font-size: 0.72rem;
-  color: #666;
-  background: white;
-  padding: 0 4px;
-  z-index: 1;
-}
-
-.selectValue {
+/* ---------- placeholder ---------- */
+.placeholderText {
   flex: 1;
-  height: 100%;
+  color: var(--form-placeholder, #9e9e9e);
+  font-size: 0.8rem;
+  text-align: right;
+  user-select: none;
+}
+
+/* ---------- ناحیه نمایش مقدار ---------- */
+.selectedArea {
+  flex: 1;
   display: flex;
   align-items: center;
-  font-size: 0.75rem;
-  text-align: right;
-  direction: rtl;
-  padding: 0 32px 0 0;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
-.placeholderText {
-  opacity: 0.55;
-  font-size: 0.75rem;
-  color: #9e9e9e;
+.singleValue {
+  display: flex;
+  align-items: center;
+  color: var(--form-text, #333);
+  font-size: 0.8rem;
 }
 
+.singleValue > * {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ---------- چیپ چند انتخابی ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--form-primary-light, #e3f2fd);
+  color: var(--form-primary, #1976d2);
+  border: 1px solid rgba(25, 118, 210, 0.25);
+  border-radius: 20px;
+  padding: 3px 6px 3px 4px;
+  font-size: 0.75rem;
+  max-width: 100%;
+}
+
+.chipLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chipRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(25, 118, 210, 0.12);
+  color: var(--form-primary, #1976d2);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.chipRemove:hover {
+  background: rgba(211, 47, 47, 0.15);
+  color: var(--form-error, #d32f2f);
+}
+
+/* ---------- فلش ---------- */
 .arrowIcon {
-  position: absolute;
-  left: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.05rem;
-  pointer-events: none;
+  color: #9aa0a6;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
 }
 
+.arrowIconOpen {
+  transform: rotate(180deg);
+}
+
+/* ---------- dropdown ---------- */
 .dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 6px);
   left: 0;
   right: 0;
   z-index: 1500;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  border: 1px solid #e0e0e0;
-  max-height: 280px;
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+  border: 1px solid #eceff1;
   overflow: hidden;
   direction: rtl;
+  animation: dropdownIn 0.16s ease;
 }
 
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- جستجو ---------- */
 .searchContainer {
   position: sticky;
   top: 0;
-  background: white;
-  padding: 8px 12px;
+  background: #fafafa;
+  padding: 8px;
   display: flex;
   align-items: center;
+  gap: 8px;
   z-index: 1;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #eceff1;
+}
+
+.searchSvgIcon {
+  color: var(--form-primary, #1976d2);
+  flex-shrink: 0;
 }
 
 .searchInput {
   flex: 1;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  border: 1px solid var(--form-border, #e0e0e0);
+  border-radius: 8px;
   padding: 8px 12px;
   font-size: 0.78rem;
   height: 36px;
   direction: rtl;
+  background: white;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.searchInput::placeholder {
+  color: var(--form-placeholder, #9e9e9e);
 }
 
 .searchInput:focus {
-  outline: none;
-  border-color: #1976d2;
+  border-color: var(--form-primary, #1976d2);
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.12);
 }
 
-.searchIcon {
-  margin-right: 8px;
-  font-size: 18px;
-  color: #666;
-}
-
+/* ---------- گزینه‌ها ---------- */
 .optionsContainer {
-  max-height: calc(280px - 50px);
+  max-height: 260px;
   overflow-y: auto;
 }
 
 .optionItem {
-  padding: 8px 12px;
+  padding: 9px 12px;
   font-size: 0.8rem;
   cursor: pointer;
   direction: rtl;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s;
 }
 
 .optionItem:hover {
-  background: #f5f5f5;
+  background: #f5f7fa;
 }
 
 .optionItem.selected {
-  background: #e3f2fd;
+  background: var(--form-primary-light, #e3f2fd);
 }
 
-.optionItem:last-child {
-  margin-bottom: 0;
+.optionContent {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+/* ---------- چک‌باکس چند انتخابی ---------- */
+.checkMark {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #cfd8dc;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: white;
+  background: white;
+  transition: all 0.15s;
+}
+
+.checkMarkActive {
+  background: var(--form-primary, #1976d2);
+  border-color: var(--form-primary, #1976d2);
+}
+
+/* ---------- دکمه افزودن ---------- */
 .addItemButton {
-  padding: 10px 12px;
+  padding: 11px 12px;
   font-size: 0.8rem;
   cursor: pointer;
   direction: rtl;
   text-align: center;
-  color: #1976d2;
+  color: var(--form-primary, #1976d2);
   font-weight: 600;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid #eceff1;
   background: #f5f9ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.15s;
 }
 
 .addItemButton:hover {
-  background: #e3f2fd;
+  background: var(--form-primary-light, #e3f2fd);
+}
+
+.addItemIcon {
+  font-size: 1rem;
+  line-height: 1;
 }

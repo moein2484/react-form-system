@@ -21,8 +21,10 @@ export default function FormSelect({
   loadingText,
   renderContent,
   renderSelected,
+  renderChip,
   addItemLabel,
   onAddItem,
+  multiple = false,
   className,
   ...rest
 }) {
@@ -35,10 +37,21 @@ export default function FormSelect({
   const rules = {};
 
   if (required) {
-    rules.required = requiredMessage;
-  }
-
-  if (validate) {
+    if (multiple) {
+      rules.validate = {
+        requiredOrEmpty: (v) =>
+          Array.isArray(v) && v.length > 0
+            ? true
+            : requiredMessage,
+        ...(validate ? { custom: validate } : {}),
+      };
+    } else {
+      rules.required = requiredMessage;
+      if (validate) {
+        rules.validate = validate;
+      }
+    }
+  } else if (validate) {
     rules.validate = validate;
   }
 
@@ -68,8 +81,10 @@ export default function FormSelect({
             loadingText={loadingText}
             renderContent={renderContent}
             renderSelected={renderSelected}
+            renderChip={renderChip}
             addItemLabel={addItemLabel}
             onAddItem={onAddItem}
+            multiple={multiple}
             {...rest}
           />
           {fieldState.error && (

@@ -1,36 +1,469 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# سیستم فرم اختصاصی (myForm)
 
-## Getting Started
+یک کتابخانه کامپوننت فرم فارسی/راست‌چین قابل استفاده مجدد، ساخته‌شده با **Next.js / React** و **react-hook-form** و **Zod**.
 
-First, run the development server:
+این سیستم شامل مجموعه‌ای از اینپوت‌های آماده است که می‌توانید برای ساخت فرم در هر پروژه‌ای از آن‌ها استفاده کنید. تمام فرم‌های مثال در صفحه اصلی (`/`) قرار دارند؛ با کلیک روی دکمه submit هر فرم، مقدار فیلدها در Console مرورگر لاگ می‌شود.
+
+---
+
+## فهرست مطالب
+
+- [ویژگی‌ها](#ویژگی‌ها)
+- [نصب و راه‌اندازی](#نصب-و-راه‌اندازی)
+- [استفاده سریع](#استفاده-سریع)
+- [کامپوننت اصلی Form](#کامپوننت-اصلی-form)
+- [لیست کامل اینپوت‌ها](#لیست-کامل-اینپوتها)
+- [مرجع پراپ‌های مشترک](#مرجع-پراپهای-مشترک)
+- [اینپوت‌ها به‌صورت تک‌تک](#اینپوتها-بهصورت-تکتک)
+  - [FormInput](#1-forminput)
+  - [FormNumber](#2-formnumber)
+  - [FormEmail](#3-formemail)
+  - [FormPassword](#4-formpassword)
+  - [FormCurrency](#5-formcurrency)
+  - [FormPercentage](#6-formpercentage)
+  - [FormDate](#7-formdate)
+  - [FormTime](#8-formtime)
+  - [FormSelect (یکپارچه)](#9-formselect-یکپارچه)
+  - [FormRadio](#10-formradio)
+  - [FormCheckbox](#11-formcheckbox)
+  - [FormSwitch](#12-formswitch)
+- [دکمه‌ها و اکشن‌ها](#دکمهها-و-اکشنها)
+- [استایل و شخصی‌سازی](#استایل-و-شخصیسازی)
+- [فونت فارسی](#فونت-فارسی)
+- [فرم‌های چند انتخابی](#فرمهای-چند-انتخابی)
+- [پورت کردن به پروژه دیگر](#پورت-کردن-به-پروژه-دیگر)
+
+---
+
+## ویژگی‌ها
+
+- ✅ تمام اینپوت‌ها راست‌چین و فارسی
+- ✅ یکپارچه با **react-hook-form** (اعتبارسنجی در سطح فیلد)
+- ✅ پشتیبانی از **Zod schema** برای اعتبارسنجی پیشرفته
+- ✅ دو حالت فرم: **Normal** و **Strict**
+- ✅ اسکرول خودکار به اولین فیلد خطادار (در حالت Normal)
+- ✅ تاریخ شمسی با ذخیره میلادی
+- ✅ پیکر ساعت با پاپ‌آپ دنبال‌کننده اسکرول
+- ✅ سلکت یکپارچه با جستجو، افزودن آیتم، رندر سفارشی و **چند انتخابی**
+- ✅ استایل‌های ماژولار و قابل انتقال (CSS Modules)
+- ✅ فونت فارسی **DanaFaNum**
+
+---
+
+## نصب و راه‌اندازی
+
+پیش‌نیازها:
+
+- Node.js نسخه 18 یا بالاتر
+- یک پروژه Next.js (نسخه 16 به بالا توصیه می‌شود)
+
+```bash
+# نصب وابستگی‌ها
+npm install
+
+# اجرای سرور توسعه
+npm run dev
+```
+
+سپس آدرس `http://localhost:3000` را در مرورگر باز کنید تا تمام دموها را ببینید. بک‌اند را باز کنید (F12) تا خروجی submit هر فرم را مشاهده کنید.
+
+---
+
+## استفاده سریع
+
+```jsx
+import {
+  Form,
+  FormInput,
+  FormEmail,
+  FormSelect,
+  FormActions,
+} from "@/component/myForm";
+
+export default function Example() {
+  return (
+    <Form
+      onSubmit={(data) => console.log(data)}
+      defaultValues={{ name: "", email: "", city: "" }}
+    >
+      <FormInput
+        name="name"
+        label="نام"
+        required
+        minLength={3}
+        minLengthMessage="نام حداقل ۳ کاراکتر"
+      />
+      <FormEmail name="email" label="ایمیل" required />
+      <FormSelect
+        name="city"
+        label="شهر"
+        searchable
+        options={[
+          { id: "1", name: "تهران" },
+          { id: "2", name: "کرج" },
+        ]}
+        valueKey="id"
+        labelKey="name"
+      />
+      <FormActions submitText="ارسال" />
+    </Form>
+  );
+}
+```
+
+---
+
+## کامپوننت اصلی Form
+
+کامپوننت `<Form>` اتصال به react-hook-form را فراهم می‌کند و همه فیلدها را با **Context** تغذیه می‌کند.
+
+| پراپ | نوع | پیش‌فرض | توضیح |
+|------|-----|---------|-------|
+| `onSubmit` | `(data) => void` | – | تابعی که بعد از ارسال موفق با مقادیر فرم صدا زده می‌شود |
+| `defaultValues` | `object` | `{}` | مقادیر اولیه فیلدها |
+| `schema` | `ZodSchema` | – | در صورت ارائه، اعتبارسنجی با Zod انجام می‌شود |
+| `type` | `"normal" \| "strict"` | `"normal"` | `strict`: دکمه submit تا پر شدن کامل غیرفعال است |
+| `validationMode` | `"onBlur" \| "onChange" \| "onSubmit"` | `"onBlur"` | زمان انجام اعتبارسنجی |
+| `className` | `string` | – | کلاس سفارشی روی تگ `form` |
+
+> **نکته اسکرول خودکار:** در حالت `normal`، بعد از submit اگر فرم دارای فیلد خالی/خطادار باشد، صفحه به‌صورت خودکار و نرم (smooth) به **اولین فیلد خطادار** اسکرول می‌شود و فوکوس روی آن قرار می‌گیرد.
+
+---
+
+## لیست کامل اینپوت‌ها
+
+| # | کامپوننت | توضیح |
+|---|----------|-------|
+| 1 | `FormInput` | ورودی متن ساده |
+| 2 | `FormNumber` | ورودی عددی |
+| 3 | `FormEmail` | ایمیل با اعتبارسنجی خودکار |
+| 4 | `FormPassword` | رمز با دکمه نمایش/مخفی |
+| 5 | `FormCurrency` | مبلغ با جداکننده هزارگان |
+| 6 | `FormPercentage` | درصد (۰ تا ۱۰۰) |
+| 7 | `FormDate` | تاریخ شمسی (ذخیره میلادی) |
+| 8 | `FormTime` | انتخاب ساعت |
+| 9 | `FormSelect` | سلکت یکپارچه (جستجو/افزودن/چند انتخابی/رندر سفارشی) |
+| 10 | `FormRadio` | گزینه‌های رادیویی |
+| 11 | `FormCheckbox` | باکس تایید (boolean) |
+| 12 | `FormSwitch` | سوییچ (boolean) |
+
+---
+
+## مرجع پراپ‌های مشترک
+
+بیشتر اینپوت‌ها این پراپ‌ها را دارند:
+
+| پراپ | نوع | توضیح |
+|------|-----|-------|
+| `name` | `string` (الزامی) | نام فیلد در فرم |
+| `label` | `string` | عنوان نمایشی |
+| `placeholder` | `string` | متن راهنمای داخل اینپوت |
+| `required` | `boolean` | الزامی بودن فیلد |
+| `requiredMessage` | `string` | پیام خطای الزامی بودن |
+| `validate` | `(value) => true \| string` | تابع اعتبارسنجی سفارشی |
+| `disabled` | `boolean` | غیرفعال بودن |
+| `className` | `string` | کلاس سفارشی |
+
+همه فیلدها از `react-hook-form` استفاده می‌کنند و باید داخل `<Form>` باشند در غیر این صورت خطا می‌دهند.
+
+---
+
+## اینپوت‌ها به‌صورت تک‌تک
+
+### 1) FormInput
+
+ورودی متن ساده.
+
+**پراپ‌های اختصاصی:**
+
+| پراپ | نوع | توضیح |
+|------|-----|-------|
+| `type` | `string` | نوع input استاندارد HTML (پیش‌فرض `text`) |
+| `minLength` | `number` | حداقل تعداد کاراکتر |
+| `minLengthMessage` | `string` | پیام خطای minLength |
+| `maxLength` | `number` | حداکثر تعداد کاراکتر |
+| `maxLengthMessage` | `string` | پیام خطای maxLength |
+| `pattern` | `RegExp \| string` | الگوی regex |
+| `patternMessage` | `string` | پیام خطای pattern |
+| `readOnly` | `boolean` | فقط‌خواندنی |
+
+### 2) FormNumber
+
+ورودی عددی با اعتبارسنجی عددی.
+
+| پراپ | نوع | توضیح |
+|------|-----|-------|
+| `min` | `number` | حداقل مقدار |
+| `minMessage` | `string` | پیام خطا |
+| `max` | `number` | حداکثر مقدار |
+| `maxMessage` | `string` | پیام خطا |
+| `step` | `number` | گام افزایش |
+| `readOnly` | `boolean` | فقط‌خواندنی |
+
+### 3) FormEmail
+
+ایمیل با الگوی اعتبارسنجی از پیش تعریف‌شده.
+
+| پراپ | نوع | توضیح |
+|------|-----|-------|
+| `emailMessage` | `string` | پیام خطای ایمیل نامعتبر |
+| `readOnly` | `boolean` | فقط‌خواندنی |
+
+### 4) FormPassword
+
+رمز عبور با دکمه نمایش (👁️) / مخفی (🔒).
+
+| پراپ | نوع | توضیح |
+|------|-----|-------|
+| `minLength` / `maxLength` | `number` | محدودیت طول |
+| `minLengthMessage` / `maxLengthMessage` | `string` | پیام خطا |
+| `showToggle` | `boolean` (پیش‌فرض `true`) | نمایش دکمه چشم |
+| `readOnly` | `boolean` | فقط‌خواندنی |
+
+### 5) FormCurrency
+
+ورودی مبلغ با کاماگذاری هزارگان (نمایش LTR). مقدار ذخیره‌شده عدد است.
+
+| پراپ | نوع | توضیح |
+|------|-----|-------|
+| `min` / `minMessage` | `number` / `string` | حداقل مبلغ |
+| `max` / `maxMessage` | `number` / `string` | حداکثر مبلغ |
+
+### 6) FormPercentage
+
+ورودی درصد با نماد ٪. پیش‌فرض `min=0`، `max=100`، `step=0.01`.
+
+### 7) FormDate
+
+تقویم **شمسی (Jalali)**. کاربر تاریخ را شمسی انتخاب می‌کند اما مقدار ذخیره‌شده در فرم **میلادی** به فرمت `YYYY-MM-DD` است (برای ذخیره در دیتابیس).
+
+| پراپ | نوع | توضیح |
+|------|-----|-------|
+| `min` / `minMessage` | `string` (میلادی `YYYY-MM-DD`) / `string` | حداقل تاریخ |
+| `max` / `maxMessage` | `string` / `string` | حداکثر تاریخ |
+
+**مثال:** انتخاب تاریخ شمسی `۱۴۰۳/۰۷/۲۲` → ذخیره می‌شود `2024-10-13`.
+
+### 8) FormTime
+
+انتخاب ساعت با یک پیکر بازشودنی (دست‌ساز) شامل دو ستون ساعت و دقیقه. مقدار رشته `HH:mm` است (مثلا `"08:00"`).
+
+| پراپ | نوع | توضیح |
+|------|-----|-------|
+| `type` | `string` | در صورت `"meeting"` دکمه تمام‌عرض می‌شود |
+
+> پاپ‌آپ ساعت موقعیت خود را هنگام **اسکرول صفحه و تغییر سایز** به‌روزرسانی می‌کند و از لبه صفحه خارج نمی‌شود.
+
+### 9) FormSelect (یکپارچه)
+
+سلکت یکپارچه و قدرتمند — جایگزین هر دو `FormSelect` و `FormSearchableSelect` قبلی.
+
+| پراپ | نوع | پیش‌فرض | توضیح |
+|------|-----|---------|-------|
+| `options` | `array` | `[]` | لیست گزینه‌ها |
+| `valueKey` | `string` | `"value"` | کلید مقدار هر گزینه |
+| `labelKey` | `string` | `"label"` | کلید متن نمایشی |
+| `searchable` | `boolean` | `false` | نمایش باکس جستجو |
+| `multiple` | `boolean` | `false` | فعال کردن **چند انتخابی** |
+| `loading` | `boolean` | `false` | حالت بارگذاری |
+| `loadingText` | `string` | `"در حال بارگذاری..."` | متن حالت بارگذاری |
+| `renderContent` | `(option) => ReactNode` | – | رندر سفارشی هر گزینه (مثلا آواتار + نام + نقش) |
+| `renderSelected` | `(option) => ReactNode` | – | رندر سفارشی مقدار انتخاب‌شده |
+| `renderChip` | `(option) => ReactNode` | – | رندر سفارشی هر چیپ در چند انتخابی |
+| `addItemLabel` | `string` | – | متن دکمه «افزودن» در پایین لیست |
+| `onAddItem` | `() => void` | – | تابع کلیک دکمه افزودن |
+
+**مثال چند انتخابی (چیپ‌ها زیر اینپوت):**
+
+```jsx
+<FormSelect
+  name="hobbies"
+  label="علاقه‌مندی‌ها"
+  searchable
+  multiple
+  required
+  requiredMessage="حداقل یک مورد انتخاب کنید"
+  options={hobbyOptions}
+  valueKey="id"
+  labelKey="name"
+/>
+```
+
+در حالت `multiple`، آیتم‌های انتخاب‌شده به‌صورت چیپ‌های قابل حذف داخل (و در صورت نیاز ادامه آنها) نمایش داده می‌شوند. مقدار فیلد یک **آرایه** است (مثلا `["sport", "music"]`).
+
+**مثال رندر سفارشی (آواتار):**
+
+```jsx
+<FormSelect
+  name="user"
+  options={users}
+  valueKey="id"
+  labelKey="name"
+  searchable
+  renderContent={(user) => (
+    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <span>{user.avatar}</span>
+      <span>{user.name}</span>
+      <em>{user.email}</em>
+    </div>
+  )}
+/>
+```
+
+### 10) FormRadio
+
+گزینه‌های رادیویی.
+
+| پراپ | نوع | پیش‌فرض | توضیح |
+|------|-----|---------|-------|
+| `options` | `array` | `[]` | لیست گزینه‌ها |
+| `valueKey` | `string` | `"value"` | کلید مقدار |
+| `labelKey` | `string` | `"label"` | کلید متن |
+
+### 11) FormCheckbox
+
+تیک تایید — مقدار فیلد `boolean` است.
+
+### 12) FormSwitch
+
+سوییچ روشن/خاموش — مقدار فیلد `boolean` است.
+
+---
+
+## دکمه‌ها و اکشن‌ها
+
+### FormActions
+
+| پراپ | نوع | پیش‌فرض | توضیح |
+|------|-----|---------|-------|
+| `submitText` | `string` | `"ارسال"` | متن دکمه submit |
+| `resetText` | `string` | `"بازنشانی"` | متن دکمه بازنشانی |
+| `showReset` | `boolean` | `true` | نمایش دکمه بازنشانی |
+| `onReset` | `() => void` | – | تابع بعد از بازنشانی |
+| `children` | `ReactNode` | – | اگر ارسال شود، به‌جای دکمه‌های پیش‌فرض رندر می‌شود |
+
+### FormSubmit
+
+دکمه submit مستقل. اگر به‌تنهایی استفاده نشود، مقدار `children` به‌صورت متن دکمه رندر می‌شود.
+
+---
+
+## استایل و شخصی‌سازی
+
+استایل‌ها با **CSS Modules** نوشته شده‌اند و خودفزایشی (self-contained) هستند؛ یعنی با انتقال پوشه `myForm`، استایل‌ها همراه آن اعمال می‌شوند.
+
+**متغیرهای CSS سراسری** (تعریف‌شده در `:root`):
+
+| متغیر | مقدار پیش‌فرض | کاربرد |
+|-------|---------------|--------|
+| `--font-fa` | `"DanaFaNum", Tahoma, sans-serif` | فونت سراسری |
+| `--form-primary` | `#1976d2` | رنگ اصلی (آبی) |
+| `--form-primary-light` | `#e3f2fd` | پس‌زمینه روشن انتخابی |
+| `--form-primary-hover` | `#115293` | هوور رنگ اصلی |
+| `--form-success` | `#4caf50` | رنگ موفقیت (دکمه submit) |
+| `--form-success-hover` | `#388e3c` | هوور سبز |
+| `--form-error` | `#d32f2f` | رنگ خطا |
+| `--form-border` | `#e0e0e0` | رنگ حاشیه اینپوت |
+| `--form-border-hover` | `#b0bec5` | هوور حاشیه |
+| `--form-disabled-bg` | `#f5f5f5` | پس‌زمینه غیرفعال |
+| `--form-text` | `#333` | رنگ متن |
+| `--form-placeholder` | `#9e9e9e` | رنگ placeholder |
+| `--form-radius` | `10px` | گوشه‌های گرد |
+
+برای تغییر ظاهر کل سیستم کافی است این متغیرها را در `globals.css` پروژه‌ی خود (یا در یک فایل CSS ایمپورت‌شده) بازنویسی کنید:
+
+```css
+:root {
+  --form-primary: #9c27b0;
+  --form-radius: 6px;
+}
+```
+
+---
+
+## فونت فارسی
+
+فونت **DanaFaNum** در `public/fonts/` قرار دارد و از طریق `globals.css` با `@font-face` بارگذاری می‌شود. وزن‌های موجود:
+
+- Thin (100), UltraLight (200), Light (300), Regular (400), Medium (500), DemiBold (600), Bold (700), ExtraBold (800), Black (900)
+
+اگر فونت دیگری (مثل YekanBakh یا Peyda) خواستید، کافی است تعریف `@font-face` در `globals.css` را تغییر دهید و مسیر فایل‌ها را آپدیت کنید.
+
+---
+
+## فرم‌های چند انتخابی
+
+سلکت چند انتخابی (`multiple`) در لاگ submit به‌صورت **آرایه** برگردانده می‌شود:
+
+```js
+// خروجی onSubmit
+{
+  hobbies: ["sport", "music"], // آرایه
+}
+```
+
+چیپ‌های انتخاب‌شده داخل اینپوت نمایش داده می‌شوند و هر چیپ دکمه حذف (x) دارد.
+
+---
+
+## پورت کردن به پروژه دیگر
+
+1. پوشه `src/component/myForm` را کامل کپی کنید.
+2. از فایل `myForm/index.js` ایمپورت کنید:
+
+```js
+import {
+  Form,
+  FormInput,
+  FormSelect,
+  FormActions,
+  // ...
+} from "./myForm";
+```
+
+3. مطمئن شوید وابستگی‌های زیر نصب هستند:
+   - `react-hook-form`
+   - `@hookform/resolvers`
+   - `zod` (در صورت استفاده از schema)
+   - `react-multi-date-picker`
+   - `react-date-object`
+   - `dayjs`
+   - `framer-motion`
+
+4. تعریف `@font-face` فونت DanaFaNum (در بخش فونت بالا) و متغیرهای CSS را به پروژه خود اضافه کنید.
+
+---
+
+## اجرای نمونه‌ها
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+صفحه اصلی (`/`) شامل ۱۷ کارت دموی مختلف است:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+1. FormSelect (بدون جستجو)
+2. FormSelect با جستجو
+3. FormSelect چند انتخابی
+4. FormSelect با افزودن آیتم
+5. FormSelect با رندر آواتار
+6. FormInput
+7. FormNumber
+8. FormEmail
+9. FormPassword
+10. FormCurrency
+11. FormPercentage
+12. FormDate
+13. FormTime
+14. FormRadio
+15. FormCheckbox
+16. FormSwitch
+17. تست اسکرول خودکار به اولین خطا
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+هر کارت یک فرم مستقل با دکمه submit دارد. خروجی در Console مرورگر لاگ می‌شود.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## مجوز
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is MIT licensed.

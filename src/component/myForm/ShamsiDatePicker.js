@@ -60,7 +60,7 @@ const ShamsiDatePicker = forwardRef(
             border: `1px solid ${error ? "#d32f2f" : "#e0e0e0"}`,
             padding: "0 12px",
             fontSize: "0.85rem",
-            fontFamily: "Vazirmatn, sans-serif",
+            fontFamily: "var(--font-fa)",
             outline: "none",
             boxSizing: "border-box",
           }}

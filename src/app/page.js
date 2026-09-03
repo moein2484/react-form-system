@@ -1,10 +1,5 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import FormDemos from "../components/FormDemos";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-
-    </div>
-  );
+  return <FormDemos />;
 }
