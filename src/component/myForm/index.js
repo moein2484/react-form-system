@@ -18,6 +18,7 @@ import FormRadio from "./fields/FormRadio";
 import FormSwitch from "./fields/FormSwitch";
 import FormFileUpload from "./fields/FormFileUpload";
 import FormFileUploadMultiple from "./fields/FormFileUploadMultiple";
+import FormTextarea from "./fields/FormTextarea";
 
 // Actions
 import FormSubmit from "./actions/FormSubmit";
@@ -52,6 +53,7 @@ export {
   FormSwitch,
   FormFileUpload,
   FormFileUploadMultiple,
+  FormTextarea,
 
   // Actions
   FormSubmit,

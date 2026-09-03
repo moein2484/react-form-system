@@ -41,6 +41,7 @@ export default function SearchableSelect({
   renderChip,
   inlineLabel,
   required,
+  error = false,
 }) {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -122,7 +123,11 @@ export default function SearchableSelect({
 
   return (
     <div className={styles.formControl}>
-      <div className={inlineLabel ? styles.inlineWrap : undefined}>
+      <div
+        className={`${inlineLabel ? styles.inlineWrap : undefined} ${
+          error ? styles.inlineWrapError : ""
+        }`}
+      >
         {inlineLabel && (
           <span className={styles.inlineLabel}>
             {inlineLabel}
@@ -135,7 +140,7 @@ export default function SearchableSelect({
             disabled ? styles.disabled : ""
           } ${isOpen ? styles.selectOpen : ""} ${
             inlineLabel ? styles.selectInline : ""
-          }`}
+          } ${error ? styles.error : ""}`}
           onClick={handleSelectClick}
           data-empty={isEmpty ? "true" : "false"}
         >

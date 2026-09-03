@@ -91,6 +91,7 @@ export default function FormSelect({
             multiple={multiple}
             inlineLabel={inline ? title : undefined}
             required={required}
+            error={!!fieldState.error}
             {...rest}
           />
           {fieldState.error && (

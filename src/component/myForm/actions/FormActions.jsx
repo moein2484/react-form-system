@@ -11,6 +11,12 @@ export default function FormActions({
   showReset = true,
   onReset,
   className,
+  submitClassName,
+  resetClassName,
+  submitStyle,
+  resetStyle,
+  submitProps,
+  resetProps,
   ...rest
 }) {
   const { reset, formState } = useFormContext();
@@ -28,13 +34,21 @@ export default function FormActions({
             <button
               type="button"
               onClick={handleReset}
-              className={styles.resetButton}
+              className={`${styles.resetButton} ${resetClassName || ""}`}
+              style={resetStyle}
               disabled={formState.isSubmitting}
+              {...resetProps}
             >
               {resetText}
             </button>
           )}
-          <FormSubmit>{submitText}</FormSubmit>
+          <FormSubmit
+            className={submitClassName}
+            style={submitStyle}
+            {...submitProps}
+          >
+            {submitText}
+          </FormSubmit>
         </>
       )}
     </div>

@@ -63,7 +63,7 @@ export default function FileTypeIcon({ file }) {
     return (
       <div className={styles.previewWrap}>
         <img src={src} className={styles.previewImg} alt={file.name} />
-        <span className={`${styles.typeBadge} ${styles.imgBadge}`}>{BADGES.image}</span>
+        <span className={styles.typeBadge}>{BADGES.image}</span>
       </div>
     );
   }

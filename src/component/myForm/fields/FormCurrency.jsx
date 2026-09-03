@@ -3,6 +3,7 @@
 import { useFormContext } from "../core/FormProvider";
 import { Controller } from "react-hook-form";
 import CurrencyInput from "../CurrencyInput";
+import { numberToPersianWords } from "../utils/persianWords";
 import styles from "./Field.module.css";
 
 export default function FormCurrency({
@@ -18,6 +19,8 @@ export default function FormCurrency({
   maxMessage,
   validate,
   disabled,
+  showPriceWords = false,
+  priceWordsUnit = "تومان",
   className,
   ...rest
 }) {
@@ -60,28 +63,40 @@ export default function FormCurrency({
       name={name}
       control={control}
       rules={rules}
-      render={({ field, fieldState }) => (
-        <div className={styles.fieldContainer} data-form-field={name}>
-          {title && !inline && (
-            <label className={styles.label}>
-              {title}
-              {required && <span className={styles.required}>*</span>}
-            </label>
-          )}
-          <CurrencyInput
-            value={field.value || ""}
-            onChange={(value) => field.onChange(value)}
-            placeholder={placeholder}
-            disabled={disabled}
-            inlineLabel={inline ? title : undefined}
-            required={required}
-            {...rest}
-          />
-          {fieldState.error && (
-            <span className={styles.errorMessage}>{fieldState.error.message}</span>
-          )}
-        </div>
-      )}
+      render={({ field, fieldState }) => {
+            const priceWords =
+              showPriceWords && (field.value || field.value === 0)
+                ? numberToPersianWords(field.value)
+                : "";
+
+            return (
+              <div className={styles.fieldContainer} data-form-field={name}>
+                {title && !inline && (
+                  <label className={styles.label}>
+                    {title}
+                    {required && <span className={styles.required}>*</span>}
+                  </label>
+                )}
+                <CurrencyInput
+                  value={field.value || ""}
+                  onChange={(value) => field.onChange(value)}
+                  placeholder={placeholder}
+                  disabled={disabled}
+                  inlineLabel={inline ? title : undefined}
+                  required={required}
+                  {...rest}
+                />
+                {priceWords ? (
+                  <span className={styles.wording}>
+                    {priceWords} {priceWordsUnit}
+                  </span>
+                ) : null}
+                {fieldState.error && (
+                  <span className={styles.errorMessage}>{fieldState.error.message}</span>
+                )}
+              </div>
+            );
+          }}
     />
   );
 }

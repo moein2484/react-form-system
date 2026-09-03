@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import styles from "./FileUpload.module.css";
+import FileTypeIcon from "./FileTypeIcon";
 
 const toReadableSize = (bytes) => {
   if (!bytes && bytes !== 0) return "";
@@ -10,37 +11,75 @@ const toReadableSize = (bytes) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} مگابایت`;
 };
 
-const isImage = (file) => (file.type || "").startsWith("image/");
+function DefaultFileItem({ file, index, status, onRemove, disabled, uploadText, doneText }) {
+  const isUploading = status === "uploading";
+  const isDone = status === "done";
 
-function FilePreview({ file }) {
-  const [src, setSrc] = useState(null);
-  return isImage(file) ? (
-    <div className={styles.previewWrap}>
-      <img
-        ref={(img) => {
-          if (img && src === null) {
-            const reader = new FileReader();
-            reader.onload = () => setSrc(reader.result);
-            reader.readAsDataURL(file);
-          }
-        }}
-        src={src || undefined}
-        className={styles.previewImg}
-        alt={file.name}
-      />
-    </div>
-  ) : (
-    <div className={styles.fileIcon}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinejoin="round"
-        />
-        <path d="M14 2v6h6" stroke="currentColor" strokeWidth="1.8" />
-      </svg>
-    </div>
+  return (
+    <li className={`${styles.fileItem} ${isUploading ? styles.uploading : ""} ${isDone ? styles.uploaded : ""}`}>
+      {isUploading ? (
+        <span className={`${styles.typeIcon} ${styles.uploadingIcon}`}>
+          <span className={styles.spinner} />
+        </span>
+      ) : (
+        <FileTypeIcon file={file} />
+      )}
+      <div className={styles.fileInfo}>
+        <span className={styles.fileNameRow}>
+          <span className={styles.fileName}>{file.name}</span>
+          {isDone && (
+            <span className={styles.successCheck}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M5 12l4 4L19 6"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          )}
+        </span>
+        <span className={styles.fileMeta}>
+          {isUploading ? (
+            <span className={styles.statusText}>
+              {uploadText || "در حال بارگذاری..."}
+            </span>
+          ) : (
+            <>
+              {toReadableSize(file.size)}
+              {isDone && (
+                <span className={`${styles.statusText} ${styles.done}`}>
+                  {doneText || "بارگذاری شد"}
+                </span>
+              )}
+            </>
+          )}
+        </span>
+      </div>
+      {onRemove && !disabled && (
+        <button
+          type="button"
+          className={styles.removeBtn}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(index, file);
+          }}
+          disabled={disabled || isUploading}
+          aria-label={`حذف ${file.name}`}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M6 6l12 12M18 6L6 18"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
+      )}
+    </li>
   );
 }
 
@@ -56,6 +95,9 @@ export default function FileDropzone({
   browseText,
   renderItem,
   onRemove,
+  getStatus,
+  uploadText,
+  doneText,
 }) {
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef(null);
@@ -144,44 +186,22 @@ export default function FileDropzone({
 
       {files.length > 0 && (
         <ul className={styles.fileList}>
-          {files.map((file, index) => (
-            <li key={`${file.name}-${index}`} className={styles.fileItem}>
-              {renderItem ? (
-                renderItem(file, index)
-              ) : (
-                <>
-                  <FilePreview file={file} />
-                  <div className={styles.fileInfo}>
-                    <span className={styles.fileName}>{file.name}</span>
-                    {file.size !== undefined && (
-                      <span className={styles.fileMeta}>{toReadableSize(file.size)}</span>
-                    )}
-                  </div>
-                  {onRemove && (
-                    <button
-                      type="button"
-                      className={styles.removeBtn}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onRemove(index, file);
-                      }}
-                      disabled={disabled}
-                      aria-label={`حذف ${file.name}`}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                        <path
-                          d="M6 6l12 12M18 6L6 18"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                </>
-              )}
-            </li>
-          ))}
+          {files.map((file, index) =>
+            renderItem ? (
+              renderItem(file, index)
+            ) : (
+              <DefaultFileItem
+                key={`${file.name}-${index}`}
+                file={file}
+                index={index}
+                status={getStatus ? getStatus(file, index) : undefined}
+                onRemove={onRemove}
+                disabled={disabled}
+                uploadText={uploadText}
+                doneText={doneText}
+              />
+            ),
+          )}
         </ul>
       )}
     </div>

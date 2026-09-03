@@ -37,6 +37,16 @@
   margin-right: 2px;
 }
 
+/* حالت خطا — لیبل داخل outline (inline) */
+.inlineWrapError {
+  border-color: var(--form-error, #d32f2f) !important;
+}
+
+.inlineWrapError:focus-within {
+  border-color: var(--form-error, #d32f2f) !important;
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.12);
+}
+
 .selectInline {
   flex: 1;
   min-width: 0;
@@ -77,6 +87,21 @@
   background-color: var(--form-disabled-bg, #f5f5f5);
   cursor: not-allowed;
   opacity: 0.75;
+}
+
+/* حالت خطا (غیر inline) */
+.selectContainer.error {
+  border-color: var(--form-error, #d32f2f);
+}
+
+.selectContainer.error:hover {
+  border-color: var(--form-error, #d32f2f);
+}
+
+.selectContainer.error:focus-within,
+.selectContainer.error.selectOpen {
+  border-color: var(--form-error, #d32f2f);
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.12);
 }
 
 /* ---------- placeholder ---------- */

@@ -17,6 +17,7 @@ import {
   FormSwitch,
   FormFileUpload,
   FormFileUploadMultiple,
+  FormTextarea,
   FormActions,
 } from "../component/myForm";
 import styles from "./FormDemos.module.css";
@@ -313,8 +314,11 @@ export default function FormDemos() {
         </Form>
       </FormCard>
 
-      <FormCard title="۱۰) FormCurrency" description="مبلغ با جداکننده هزارگان">
-        <Form type={formType} onSubmit={logSubmit("Currency")} defaultValues={{ price: 1000000 }}>
+      <FormCard
+        title="۱۰) FormCurrency"
+        description="مبلغ با جداکننده هزارگان — با showPriceWords مبلغ به حروف فارسی هم نوشته می‌شود"
+      >
+        <Form type={formType} onSubmit={logSubmit("Currency")} defaultValues={{ price: 1200000 }}>
           <FormCurrency
             name="price"
             label="مبلغ (تومان)"
@@ -322,6 +326,7 @@ export default function FormDemos() {
             required
             min={1000}
             minMessage="مبلغ حداقل ۱۰۰۰"
+            showPriceWords
           />
           <FormActions submitText="ثبت FormCurrency" />
         </Form>
@@ -468,7 +473,7 @@ export default function FormDemos() {
       {/* ====== آپلود فایل (تکی) ====== */}
       <FormCard
         title="۱۷) FormFileUpload (تکی)"
-        description='باکس درگ‌اند‌دراپ برای افزودن یک فایل — با validation حجم و نوع فایل'
+        description='درگ‌اند‌دراپ + لودینگ هنگام آپلود + ایکون نوع فایل (PDF/Word/عکس/...) — با prop روی onUpload'
       >
         <Form
           type={formType}
@@ -484,6 +489,7 @@ export default function FormDemos() {
             acceptMessage="فقط فایل PDF یا مصور مجاز است"
             maxSize={2 * 1024 * 1024}
             maxSizeMessage="حجم فایل نباید بیشتر از ۲ مگابایت باشد"
+            onUpload={() => new Promise((r) => setTimeout(r, 1500))}
           />
           <FormActions submitText="ثبت فایل" />
         </Form>
@@ -492,7 +498,7 @@ export default function FormDemos() {
       {/* ====== آپلود چند فایل ====== */}
       <FormCard
         title="۱۸) FormFileUploadMultiple (چندتایی)"
-        description='درگ‌اند‌دراپ چند فایل به‌صورت همزمان — با پیش‌نمایش تصویر و امکان حذف'
+        description='چند فایل هم‌زمان — لودینگ برای هریک + پیش‌نمایش تصویر + ایکون نوع فایل'
       >
         <Form
           type={formType}
@@ -506,14 +512,92 @@ export default function FormDemos() {
             acceptMessage="فقط تصویر مجاز است"
             maxSize={5 * 1024 * 1024}
             maxSizeMessage="حجم هر تصویر نباید بیشتر از ۵ مگابایت باشد"
+            onUpload={() => new Promise((r) => setTimeout(r, 1800))}
           />
           <FormActions submitText="ثبت تصاویر" />
         </Form>
       </FormCard>
 
+      {/* ====== Textarea ====== */}
+      <FormCard
+        title="۱۹) FormTextarea (توضیحات)"
+        description='متن چندخطی — ارتفاع با پراپ rows قابل تنظیم است و با drag از گوشه هم قابل تغییر است'
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Textarea")}
+          defaultValues={{ description: "" }}
+        >
+          <FormTextarea
+            name="description"
+            label="توضیحات"
+            placeholder="توضیحات خود را بنویسید..."
+            rows={4}
+            required
+            requiredMessage="توضیحات الزامی است"
+            minLength={10}
+            minLengthMessage="توضیحات باید حداقل ۱۰ کاراکتر باشد"
+          />
+          <FormActions submitText="ثبت توضیحات" />
+        </Form>
+      </FormCard>
+
+      {/* ====== Textarea با ارتفاع بیشتر ====== */}
+      <FormCard
+        title="۲۰) FormTextarea — ارتفاع زیاد (rows ببیشتر)"
+        description="با rows={8} جعبه بلندتر می‌شود؛ کاربر هنوز هم می‌تواند ارتفاع را با drag تنظیم کند"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("TextareaTall")}
+          defaultValues={{ notes: "" }}
+        >
+          <FormTextarea
+            name="notes"
+            label="یادداشت‌ها"
+            placeholder="یادداشت‌های بلند..."
+            rows={8}
+          />
+          <FormActions submitText="ثبت یادداشت‌ها" />
+        </Form>
+      </FormCard>
+
+      {/* ====== دکمه‌های سفارشی FormActions ====== */}
+      <FormCard
+        title="۲۱) استایل دکمه‌های FormActions — آبی"
+        description="با submitClassName و resetClassName می‌توانید استایل دکمه‌ها را کاملاً عوض کنید"
+      >
+        <Form type={formType} onSubmit={logSubmit("ActionsBlue")} defaultValues={{ name: "" }}>
+          <FormInput name="name" label="نام" placeholder="نام را وارد کنید" />
+          <FormActions
+            submitText="ثبت آبی"
+            submitClassName={styles.customSubmitBlue}
+            resetClassName={styles.customResetOutlined}
+          />
+        </Form>
+      </FormCard>
+
+      <FormCard
+        title="۲۲) استایل دکمه‌های FormActions — گرادیانت و گرد"
+        description="با submitClassName=گرادیانت و resetClassName=دایره‌ای، دکمه‌ها ظاهر دلخواه می‌گیرند"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("ActionsGradient")}
+          defaultValues={{ email: "" }}
+        >
+          <FormInput name="email" label="ایمیل" placeholder="example@test.com" />
+          <FormActions
+            submitText="ثبت"
+            submitClassName={styles.customSubmitGradient}
+            showReset={false}
+          />
+        </Form>
+      </FormCard>
+
       {/* ====== تست اسکرول خودکار ====== */}
       <FormCard
-        title="۱۹) تست اسکرول خودکار به اولین خطا"
+        title="۲۳) تست اسکرول خودکار به اولین خطا"
         description="چند فیلد الزامی خالی بگذارید و Submit بزنید — در حالت Normal باید به اولین فیلد خالی اسکرول کند"
       >
         <Form

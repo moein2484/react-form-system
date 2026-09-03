@@ -27,6 +27,9 @@
   - [FormRadio](#10-formradio)
   - [FormCheckbox](#11-formcheckbox)
   - [FormSwitch](#12-formswitch)
+  - [FormTextarea](#13-formtextarea-توضیحات)
+  - [FormFileUpload (آپلود تکی)](#14-formfileupload-آپلود-فایل-تکی)
+  - [FormFileUploadMultiple (آپلود چند فایل)](#15-formfileuploadmultiple-آپلود-چند-فایل)
 - [دکمه‌ها و اکشن‌ها](#دکمهها-و-اکشنها)
 - [استایل و شخصی‌سازی](#استایل-و-شخصیسازی)
 - [فونت فارسی](#فونت-فارسی)
@@ -148,6 +151,7 @@ export default function Example() {
 | 12 | `FormSwitch` | سوییچ (boolean) |
 | 13 | `FormFileUpload` | آپلود فایل تکی (درگ‌اند‌دراپ) |
 | 14 | `FormFileUploadMultiple` | آپلود چند فایل هم‌زمان (درگ‌اند‌دراپ) |
+| 15 | `FormTextarea` | متن چندخطی / توضیحات با ارتفاع قابل تنظیم |
 
 ---
 
@@ -255,6 +259,17 @@ export default function Example() {
 |------|-----|-------|
 | `min` / `minMessage` | `number` / `string` | حداقل مبلغ |
 | `max` / `maxMessage` | `number` / `string` | حداکثر مبلغ |
+| `showPriceWords` | `boolean` | اگر `true` باشد، مبلغ به‌صورت حروف فارسی زیر اینپوت نمایش داده می‌شود |
+| `priceWordsUnit` | `string` | واحد نمایش در متن حروف؛ پیش‌فرض `"تومان"` |
+
+```jsx
+<FormCurrency
+  name="price"
+  label="مبلغ (تومان)"
+  showPriceWords
+// تایپ ۱۲۰۰۰۰۰ → زیر اینپوت: «یک میلیون و دویست هزار تومان»
+/>
+```
 
 ### 6) FormPercentage
 
@@ -355,7 +370,30 @@ export default function Example() {
 
 سوییچ روشن/خاموش — مقدار فیلد `boolean` است.
 
-### 13) FormFileUpload (آپلود فایل تکی)
+### 13) FormTextarea (توضیحات)
+
+متن چندخطی برای توضیحات. ارتفاع جعبه با پراپ `rows` تعیین می‌شود و کاربر می‌تواند با کشیدن گوشه‌ی پایین (گزینه `resize: vertical`) ارتفاع را تغییر دهد.
+
+| پراپ | نوع | پیش‌فرض | توضیح |
+|------|-----|---------|-------|
+| `rows` | `number` | `4` | تعداد خط‌های اولیه (ارتفاع باکس) |
+| `minLength` / `minLengthMessage` | `number` / `string` | – | حداقل تعداد کاراکتر |
+| `maxLength` / `maxLengthMessage` | `number` / `string` | – | حداکثر تعداد کاراکتر |
+| `placeholder` | `string` | – | متن راهنما |
+| `readOnly` | `boolean` | `false` | فقط‌خواندنی |
+
+```jsx
+<FormTextarea
+  name="description"
+  label="توضیحات"
+  rows={6}
+  required
+  minLength={10}
+  minLengthMessage="توضیحات حداقل ۱۰ کاراکتر"
+/>
+```
+
+### 14) FormFileUpload (آپلود فایل تکی)
 
 باکس درگ‌اند‌دراپ برای افزودن **یک** فایل. مقدار فیلد یک شیء `File` است.
 
@@ -372,32 +410,34 @@ export default function Example() {
 | `disabled` | `boolean` | `false` | غیرفعال کردن باکس |
 | `dragText`/`dragHint`/`browseText` | `string` | – | متن‌های سفارشی باکس |
 | `renderItem` | `(file, index) => ReactNode` | – | رندر سفارشی هر فایل در لیست |
+| `onUpload` | `(file) => Promise` | – | اگر داده شود، بعد از انتخاب فایل همین تابع صدا زده می‌شود و تا done شدن آن، اسپینر لودینگ نمایش می‌یابد |
+| `uploadText` | `string` | `"در حال بارگذاری..."` | متن کنار اسپینر لودینگ |
+| `uploadDoneText` | `string` | `"بارگذاری شد"` | متن بعد از موفق بودن آپلود |
+
+نمایش هر فایل در لیست، **آیکونِ مخصوص نوع آن** را نشان می‌دهد (PDF، Word، Excel، تصویر، zip، متن، سایر) و برای تصاویر پیش‌نمایش واقعی. اگر `onUpload` بدهید، اول اسپینر لودینگ و متن «در حال بارگذاری...»، بعد علامت تیک سبز و ایکون نوع فایل نمایش داده می‌شود.
 
 ```jsx
 <FormFileUpload
   name="document"
   label="سند"
   required
-  requiredMessage="انتخاب فایل الزامی است"
   accept=".pdf,.jpg,.png"
-  acceptMessage="فقط فایل PDF یا تصویر مجاز است"
   maxSize={2 * 1024 * 1024}
-  maxSizeMessage="حجم فایل حداکثر ۲ مگابایت"
+  onUpload={(file) => fetch("/api/upload", { method: "POST", body: file })}
 />
 ```
 
-### 14) FormFileUploadMultiple (آپلود چند فایل)
+### 15) FormFileUploadMultiple (آپلود چند فایل)
 
-مانند `FormFileUpload` ولی `multiple` فعال است و چند فایل هم‌زمان پذیرفته می‌شود. مقدار فیلد یک **آرایه‌ی `File`** است و برای تصاویر پیش‌نمایش و دکمه حذف هر آیتم نمایش داده می‌شود.
+مانند `FormFileUpload` ولی `multiple` فعال است و چند فایل هم‌زمان پذیرفته می‌شود. مقدار فیلد یک **آرایه‌ی `File`** است و برای تصاویر پیش‌نمایش و دکمه حذف هر آیتم نمایش داده می‌شود. همه‌ی پراپ‌های `FormFileUpload` (از جمله `onUpload`/`uploadText`/`uploadDoneText`/`renderItem`) در این‌جا هم کار می‌کنند.
 
 ```jsx
 <FormFileUploadMultiple
   name="images"
   label="تصاویر"
   accept="image/*"
-  acceptMessage="فقط تصویر مجاز است"
   maxSize={5 * 1024 * 1024}
-  maxSizeMessage="حجم هر تصویر حداکثر ۵ مگابایت"
+  onUpload={(file) => uploadToServer(file)}  // برای هر فایل جدا صدا زده می‌شود
 />
 ```
 
@@ -416,6 +456,26 @@ export default function Example() {
 | `showReset` | `boolean` | `true` | نمایش دکمه بازنشانی |
 | `onReset` | `() => void` | – | تابع بعد از بازنشانی |
 | `children` | `ReactNode` | – | اگر ارسال شود، به‌جای دکمه‌های پیش‌فرض رندر می‌شود |
+| `submitClassName` | `string` | – | کلاس سفارشی برای دکمه submit (به کلاس پایه اضافه می‌شود) |
+| `resetClassName` | `string` | – | کلاس سفارشی برای دکمه بازنشانی |
+| `submitStyle` | `object` | – | استایل inline برای دکمه submit |
+| `resetStyle` | `object` | – | استایل inline برای دکمه بازنشانی |
+| `submitProps` | `object` | – | ویژگی‌های دلخواه برای دکمه submit (مثل `title`, `id`, `aria-label`) |
+| `resetProps` | `object` | – | ویژگی‌های دلخواه برای دکمه بازنشانی |
+
+**مثال استایل‌دهی سفارشی:**
+
+```jsx
+<FormActions
+  submitText="ثبت نهایی"
+  submitClassName="my-submit-btn"
+  submitStyle={{ background: "#ff9800", borderRadius: "0" }}
+  resetClassName="my-reset-btn"
+  resetStyle={{ color: "#ff5722" }}
+/>
+```
+
+> با `submitClassName`/`resetClassName` می‌توانید از CSS Modules، CSS سراسری یا کتابخانه‌هایی مثل Tailwind استفاده کنید و چون این کلاس‌ها به کلاس پایه «اضافه» می‌شوند، برای override باید انتخابگر ویژه (مثل `!important`) به‌کار ببرید یا بعد از import بیاید.
 
 ### FormSubmit
 

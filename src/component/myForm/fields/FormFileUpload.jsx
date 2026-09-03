@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useRef } from "react";
 import { useFormContext } from "../core/FormProvider";
 import { Controller } from "react-hook-form";
 import FileDropzone from "./FileDropzone";
@@ -37,6 +38,9 @@ export default function FormFileUpload({
   validate,
   disabled,
   multiple = false,
+  onUpload,
+  uploadText = "در حال بارگذاری...",
+  uploadDoneText = "بارگذاری شد",
   dragText,
   dragHint,
   browseText,
@@ -51,6 +55,8 @@ export default function FormFileUpload({
   }
 
   const toValidateList = (v) => (multiple ? (Array.isArray(v) ? v : []) : v ? [v] : []);
+
+  const getFileKey = (file, index) => `${file.name}-${file.size}-${file.lastModified}-${index}`;
 
   const validateValue = (v) => {
     const list = toValidateList(v);
@@ -87,20 +93,56 @@ export default function FormFileUpload({
             : []
           : field.value || null;
 
+        const [statuses, setStatuses] = useState({});
+        const statusRef = useRef(statuses);
+        statusRef.current = statuses;
+
+        const setStatus = (key, status) => {
+          setStatuses((prev) => ({ ...prev, [key]: status }));
+        };
+
+        const runUpload = (file, index) => {
+          const key = getFileKey(file, index);
+          setStatus(key, "uploading");
+          Promise.resolve(onUpload(file))
+            .then(() => setStatus(key, "done"))
+            .catch(() => setStatus(key, "done"));
+        };
+
         const handleFiles = (list) => {
           if (multiple) {
             field.onChange([...value, ...list]);
           } else {
             field.onChange(list[0] || null);
           }
+          if (onUpload) {
+            if (multiple) {
+              list.forEach((file, i) => runUpload(file, value.length + i));
+            } else if (list[0]) {
+              runUpload(list[0], 0);
+            }
+          }
         };
 
         const handleRemove = (index) => {
+          const files = toValidateList(field.value);
+          const file = files[index];
+          if (file) {
+            const next = { ...statusRef.current };
+            delete next[getFileKey(file, index)];
+            statusRef.current = next;
+            setStatuses(next);
+          }
           if (multiple) {
-            field.onChange(value.filter((_, i) => i !== index));
+            field.onChange(files.filter((_, i) => i !== index));
           } else {
             field.onChange(null);
           }
+        };
+
+        const getStatus = (file, index) => {
+          if (!onUpload) return undefined;
+          return statusRef.current[getFileKey(file, index)];
         };
 
         return (
@@ -123,7 +165,9 @@ export default function FormFileUpload({
               browseText={browseText}
               onRemove={handleRemove}
               renderItem={renderItem}
-              {...rest}
+              getStatus={getStatus}
+              uploadText={uploadText}
+              doneText={uploadDoneText}
             />
             {fieldState.error && (
               <span className={styles.errorMessage}>{fieldState.error.message}</span>
