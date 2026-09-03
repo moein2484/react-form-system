@@ -1,0 +1,46 @@
+.actionsContainer {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  direction: rtl;
+}
+
+.submitButton {
+  padding: 10px 24px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #388e3c;
+}
+
+.submitButton:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.resetButton {
+  padding: 10px 24px;
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.resetButton:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.resetButton:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}

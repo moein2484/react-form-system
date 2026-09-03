@@ -1,0 +1,16 @@
+.paper {
+  width: 240px;
+  padding: 16px;
+  border-radius: 24px;
+  direction: rtl;
+  background: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0;
+}
+
+.columnsContainer {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  gap: 16px;
+}

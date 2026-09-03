@@ -1,0 +1,63 @@
+.fullWidth {
+  width: 100%;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* DatePicker Container */
+.shamsi-datepicker-container {
+  width: 100%;
+}
+
+.shamsi-datepicker-container .rmdp-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.shamsi-datepicker-container .rmdp-header {
+  background: #1976d2;
+  color: #fff;
+  border-radius: 12px 12px 0 0;
+  padding: 8px;
+}
+
+.shamsi-datepicker-container .rmdp-arrow {
+  border-color: #fff;
+}
+
+.shamsi-datepicker-container .rmdp-day.rmdp-today span {
+  background: #64b5f6;
+  color: #1976d2;
+}
+
+.shamsi-datepicker-container .rmdp-day.rmdp-selected span {
+  background: #1976d2;
+  color: #fff;
+}
+
+.shamsi-datepicker-container .rmdp-week-day {
+  color: #1976d2;
+  font-weight: 700;
+}
+
+/* Input Styling */
+.shamsi-datepicker-input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.shamsi-datepicker-error:focus {
+  border-color: #d32f2f;
+  box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1);
+}
+
+.shamsi-datepicker-input::placeholder {
+  color: #9e9e9e;
+  font-size: 0.8rem;
+}
