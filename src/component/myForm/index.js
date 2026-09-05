@@ -1,6 +1,7 @@
 // Core
 import Form from "./core/Form";
-import { FormProvider, useFormContext } from "./core/FormProvider";
+import { FormProvider, useFormContext, useOptionalFormContext } from "./core/FormProvider";
+import "./globals.css";
 
 // Fields
 import FormInput from "./fields/FormInput";
@@ -36,6 +37,7 @@ export {
   Form,
   FormProvider,
   useFormContext,
+  useOptionalFormContext,
 
   // Fields
   FormInput,

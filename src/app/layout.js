@@ -1,4 +1,5 @@
 import "./globals.css";
+import "../component/myForm/globals.css";
 
 export const metadata = {
   title: "سیستم فرم اختصاصی",

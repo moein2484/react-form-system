@@ -19,6 +19,10 @@ export default function FormTextarea({
   disabled,
   readOnly,
   rows = 4,
+  height,
+  minHeight,
+  maxHeight,
+  resize = "vertical",
   className,
   ...rest
 }) {
@@ -54,6 +58,13 @@ export default function FormTextarea({
 
   const title = labelShort || label;
 
+  const inlineStyle = {
+    ...(height ? { height } : {}),
+    ...(minHeight ? { minHeight } : {}),
+    ...(maxHeight ? { maxHeight } : {}),
+    ...(resize ? { resize } : {}),
+  };
+
   return (
     <Controller
       name={name}
@@ -73,6 +84,7 @@ export default function FormTextarea({
             placeholder={placeholder}
             disabled={disabled}
             readOnly={readOnly}
+            style={inlineStyle}
             className={`${styles.textarea} ${fieldState.error ? styles.error : ""} ${className || ""}`}
             {...rest}
           />

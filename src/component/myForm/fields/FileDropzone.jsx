@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./FileUpload.module.css";
 import FileTypeIcon from "./FileTypeIcon";
 
@@ -11,12 +11,22 @@ const toReadableSize = (bytes) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} مگابایت`;
 };
 
-function DefaultFileItem({ file, index, status, onRemove, disabled, uploadText, doneText }) {
+function DefaultFileItem({
+  file,
+  index,
+  status,
+  onRemove,
+  disabled,
+  uploadText,
+  doneText,
+}) {
   const isUploading = status === "uploading";
   const isDone = status === "done";
 
   return (
-    <li className={`${styles.fileItem} ${isUploading ? styles.uploading : ""} ${isDone ? styles.uploaded : ""}`}>
+    <li
+      className={`${styles.fileItem} ${isUploading ? styles.uploading : ""} ${isDone ? styles.uploaded : ""}`}
+    >
       {isUploading ? (
         <span className={`${styles.typeIcon} ${styles.uploadingIcon}`}>
           <span className={styles.spinner} />
@@ -83,6 +93,135 @@ function DefaultFileItem({ file, index, status, onRemove, disabled, uploadText, 
   );
 }
 
+function AvatarPreview({ file, status }) {
+  const [src, setSrc] = useState(null);
+  const isImage = (file.type || "").startsWith("image/");
+  const uploading = status === "uploading";
+
+  useEffect(() => {
+    if (!isImage) return;
+    let cancelled = false;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (!cancelled) setSrc(reader.result);
+    };
+    reader.readAsDataURL(file);
+    return () => {
+      cancelled = true;
+    };
+  }, [file, isImage]);
+
+  return (
+    <div className={styles.avatarContainer}>
+      {src ? (
+        <img src={src} className={styles.avatarPreview} alt={file.name} />
+      ) : (
+        <span className={styles.icon}>
+          <svg width="54" height="54" viewBox="0 0 24 24" fill="none">
+            <circle
+              cx="12"
+              cy="8"
+              r="4"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            />
+            <path
+              d="M4 20c0-3.3 3.6-5 8-5s8 1.7 8 5"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+          </svg>
+        </span>
+      )}
+
+      {uploading && (
+        <span className={styles.avatarOverlay}>
+          <span className={styles.avatarSpinner} />
+        </span>
+      )}
+    </div>
+  );
+}
+
+function AvatarDropzone({ file, status, disabled, onChange, size = "md" }) {
+  const [dragging, setDragging] = useState(false);
+  const inputRef = useRef(null);
+
+  const handleFiles = (filesList) => {
+    const list = Array.from(filesList || []);
+    if (list.length === 0) return;
+    onChange(list);
+  };
+
+  return (
+    <div
+      className={`${styles.dropzone} ${styles.avatar} ${styles[size] || ""} ${dragging ? styles.dragging : ""} ${disabled ? styles.disabled : ""}`}
+      onClick={() => !disabled && inputRef.current && inputRef.current.click()}
+      onDragOver={(e) => {
+        e.preventDefault();
+        if (!disabled) setDragging(true);
+      }}
+      onDragLeave={() => setDragging(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setDragging(false);
+        if (disabled) return;
+        handleFiles(e.dataTransfer.files);
+      }}
+    >
+      {file ? (
+        <AvatarPreview
+          key={`${file.name}-${file.size}-${file.lastModified}-${file.type}`}
+          file={file}
+          status={status}
+        />
+      ) : (
+        <span className={styles.icon}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle
+              cx="12"
+              cy="8"
+              r="4"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            />
+            <path
+              d="M4 20c0-3.3 3.6-5 8-5s8 1.7 8 5"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+          </svg>
+        </span>
+      )}
+      {/* <span className={styles.avatarBadge}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+          />
+          <circle cx="12" cy="13" r="3.5" stroke="currentColor" strokeWidth="1.8" />
+        </svg>
+      </span> */}
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        disabled={disabled}
+        onChange={(e) => {
+          handleFiles(e.target.files);
+          e.target.value = "";
+        }}
+        style={{ display: "none" }}
+      />
+    </div>
+  );
+}
+
 export default function FileDropzone({
   value,
   onChange,
@@ -90,6 +229,8 @@ export default function FileDropzone({
   accept,
   disabled = false,
   error = false,
+  size = "md",
+  variant = "upload",
   dragText,
   dragHint,
   browseText,
@@ -120,14 +261,24 @@ export default function FileDropzone({
     e.target.value = "";
   };
 
-  const files = value
-    ? Array.isArray(value)
-      ? value
-      : [value]
-    : [];
+  const files = value ? (Array.isArray(value) ? value : [value]) : [];
+
+  if (variant === "avatar") {
+    const file = files[0] || null;
+    return (
+      <AvatarDropzone
+        file={file}
+        status={file && getStatus ? getStatus(file, 0) : undefined}
+        disabled={disabled}
+        onChange={handleFiles}
+        size={size}
+      />
+    );
+  }
 
   const containerClass = [
     styles.dropzone,
+    styles[size] || "",
     dragging ? styles.dragging : "",
     disabled ? styles.disabled : "",
     error ? styles.error : "",
@@ -137,7 +288,9 @@ export default function FileDropzone({
     <div>
       <div
         className={containerClass}
-        onClick={() => !disabled && inputRef.current && inputRef.current.click()}
+        onClick={() =>
+          !disabled && inputRef.current && inputRef.current.click()
+        }
         onDragOver={(e) => {
           e.preventDefault();
           if (!disabled) setDragging(true);
@@ -163,13 +316,17 @@ export default function FileDropzone({
           </svg>
         </span>
         <div className={styles.dragText}>
-          {dragText || (multiple ? "فایل‌ها را اینجا بکشید و رها کنید" : "فایل را اینجا بکشید و رها کنید")}
+          {dragText ||
+            (multiple
+              ? "فایل‌ها را اینجا بکشید و رها کنید"
+              : "فایل را اینجا بکشید و رها کنید")}
         </div>
         <div className={styles.dragHint}>
           {dragHint || (
             <>
               برای انتخاب، روی این‌باکس کلیک کنید یا{" "}
-              <span className={styles.browseText}>{browseText || "مرور"}</span> را بزنید
+              <span className={styles.browseText}>{browseText || "مرور"}</span>{" "}
+              را بزنید
             </>
           )}
         </div>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import {
@@ -19,6 +19,7 @@ import {
   FormFileUploadMultiple,
   FormTextarea,
   FormActions,
+  FormSubmit,
 } from "../component/myForm";
 import styles from "./FormDemos.module.css";
 
@@ -54,10 +55,34 @@ const genderOptions = [
 ];
 
 const users = [
-  { id: "u1", name: "علی محمدی", email: "ali@test.com", avatar: "👨‍💼", role: "مدیر" },
-  { id: "u2", name: "سارا احمدی", email: "sara@test.com", avatar: "👩‍💼", role: "کارشناس" },
-  { id: "u3", name: "رضا کریمی", email: "reza@test.com", avatar: "👨‍🔧", role: "فنی" },
-  { id: "u4", name: "مریم حسینی", email: "maryam@test.com", avatar: "👩‍🎨", role: "طراح" },
+  {
+    id: "u1",
+    name: "علی محمدی",
+    email: "ali@test.com",
+    avatar: "👨‍💼",
+    role: "مدیر",
+  },
+  {
+    id: "u2",
+    name: "سارا احمدی",
+    email: "sara@test.com",
+    avatar: "👩‍💼",
+    role: "کارشناس",
+  },
+  {
+    id: "u3",
+    name: "رضا کریمی",
+    email: "reza@test.com",
+    avatar: "👨‍🔧",
+    role: "فنی",
+  },
+  {
+    id: "u4",
+    name: "مریم حسینی",
+    email: "maryam@test.com",
+    avatar: "👩‍🎨",
+    role: "طراح",
+  },
 ];
 
 const initialProjects = [
@@ -145,8 +170,15 @@ export default function FormDemos() {
       </div>
 
       {/* ====== FormSelect یکپارچه ====== */}
-      <FormCard title="۱) FormSelect (بدون جستجو)" description='با پراپ searchable={false}'>
-        <Form type={formType} onSubmit={logSubmit("FormSelect")} defaultValues={{ province: "" }}>
+      <FormCard
+        title="۱) FormSelect (بدون جستجو)"
+        description="با پراپ searchable={false}"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("FormSelect")}
+          defaultValues={{ province: "" }}
+        >
           <FormSelect
             name="province"
             label="استان"
@@ -162,8 +194,12 @@ export default function FormDemos() {
       </FormCard>
 
       {/* ====== FormSelect + جستجو ====== */}
-      <FormCard title="۲) FormSelect با جستجو" description='با پراپ searchable'>
-        <Form type={formType} onSubmit={logSubmit("Searchable")} defaultValues={{ city: "" }}>
+      <FormCard title="۲) FormSelect با جستجو" description="با پراپ searchable">
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Searchable")}
+          defaultValues={{ city: "" }}
+        >
           <FormSelect
             name="city"
             label="شهر"
@@ -182,7 +218,7 @@ export default function FormDemos() {
       {/* ====== FormSelect چند انتخابی ====== */}
       <FormCard
         title="۳) FormSelect چند انتخابی (multi)"
-        description='با پراپ multiple — موارد انتخاب‌شده به‌صورت چیپ زیر اینپوت نمایش داده می‌شوند'
+        description="با پراپ multiple — موارد انتخاب‌شده به‌صورت چیپ زیر اینپوت نمایش داده می‌شوند"
       >
         <Form
           type={formType}
@@ -206,7 +242,10 @@ export default function FormDemos() {
       </FormCard>
 
       {/* ====== FormSelect + افزودن آیتم ====== */}
-      <FormCard title="۴) FormSelect با افزودن آیتم" description="با پراپ‌های addItemLabel و onAddItem">
+      <FormCard
+        title="۴) FormSelect با افزودن آیتم"
+        description="با پراپ‌های addItemLabel و onAddItem"
+      >
         <div className={styles.addRow}>
           <input
             value={newProjectName}
@@ -214,11 +253,19 @@ export default function FormDemos() {
             placeholder="نام پروژه جدید"
             className={styles.addInput}
           />
-          <button type="button" onClick={handleAddProject} className={styles.addBtn}>
+          <button
+            type="button"
+            onClick={handleAddProject}
+            className={styles.addBtn}
+          >
             افزودن
           </button>
         </div>
-        <Form type={formType} onSubmit={logSubmit("AddItem")} defaultValues={{ project: "" }}>
+        <Form
+          type={formType}
+          onSubmit={logSubmit("AddItem")}
+          defaultValues={{ project: "" }}
+        >
           <FormSelect
             name="project"
             label="پروژه (با گزینه افزودن)"
@@ -241,7 +288,11 @@ export default function FormDemos() {
         title="۵) FormSelect با رندر چند فیلد (آواتار)"
         description="با پراپ renderContent می‌توانید یک گزینه را با چند فیلد و استایل سفارشی نمایش دهید"
       >
-        <Form type={formType} onSubmit={logSubmit("Avatar")} defaultValues={{ user: "" }}>
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Avatar")}
+          defaultValues={{ user: "" }}
+        >
           <FormSelect
             name="user"
             labelShort="انتخاب کاربر"
@@ -259,8 +310,15 @@ export default function FormDemos() {
       </FormCard>
 
       {/* ====== سایر ورودی‌ها ====== */}
-      <FormCard title="۶) FormInput" description="ورودی متن ساده با minLength و required">
-        <Form type={formType} onSubmit={logSubmit("Input")} defaultValues={{ name: "" }}>
+      <FormCard
+        title="۶) FormInput"
+        description="ورودی متن ساده با minLength و required"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Input")}
+          defaultValues={{ name: "" }}
+        >
           <FormInput
             name="name"
             label="نام کاربری"
@@ -273,8 +331,15 @@ export default function FormDemos() {
         </Form>
       </FormCard>
 
-      <FormCard title="۷) FormNumber" description="ورودی عددی با محدودیت min/max">
-        <Form type={formType} onSubmit={logSubmit("Number")} defaultValues={{ age: 18 }}>
+      <FormCard
+        title="۷) FormNumber"
+        description="ورودی عددی با محدودیت min/max"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Number")}
+          defaultValues={{ age: 18 }}
+        >
           <FormNumber
             name="age"
             labelShort="سن"
@@ -288,7 +353,11 @@ export default function FormDemos() {
       </FormCard>
 
       <FormCard title="۸) FormEmail" description="اعتبارسنجی خودکار ایمیل">
-        <Form type={formType} onSubmit={logSubmit("Email")} defaultValues={{ email: "" }}>
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Email")}
+          defaultValues={{ email: "" }}
+        >
           <FormEmail
             name="email"
             labelShort="ایمیل"
@@ -300,8 +369,15 @@ export default function FormDemos() {
         </Form>
       </FormCard>
 
-      <FormCard title="۹) FormPassword" description="رمز عبور با دکمه نمایش/مخفی">
-        <Form type={formType} onSubmit={logSubmit("Password")} defaultValues={{ password: "" }}>
+      <FormCard
+        title="۹) FormPassword"
+        description="رمز عبور با دکمه نمایش/مخفی"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Password")}
+          defaultValues={{ password: "" }}
+        >
           <FormPassword
             name="password"
             label="رمز عبور"
@@ -318,7 +394,11 @@ export default function FormDemos() {
         title="۱۰) FormCurrency"
         description="مبلغ با جداکننده هزارگان — با showPriceWords مبلغ به حروف فارسی هم نوشته می‌شود"
       >
-        <Form type={formType} onSubmit={logSubmit("Currency")} defaultValues={{ price: 1200000 }}>
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Currency")}
+          defaultValues={{ price: 1200000 }}
+        >
           <FormCurrency
             name="price"
             label="مبلغ (تومان)"
@@ -333,8 +413,17 @@ export default function FormDemos() {
       </FormCard>
 
       <FormCard title="۱۱) FormPercentage" description="درصد (۰ تا ۱۰۰)">
-        <Form type={formType} onSubmit={logSubmit("Percentage")} defaultValues={{ percentage: 50 }}>
-          <FormPercentage name="percentage" label="درصد" placeholder="درصد را وارد کنید" required />
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Percentage")}
+          defaultValues={{ percentage: 50 }}
+        >
+          <FormPercentage
+            name="percentage"
+            label="درصد"
+            placeholder="درصد را وارد کنید"
+            required
+          />
           <FormActions submitText="ثبت FormPercentage" />
         </Form>
       </FormCard>
@@ -412,8 +501,15 @@ export default function FormDemos() {
         </Form>
       </FormCard>
 
-      <FormCard title="۱۲) FormDate" description="تاریخ شمسی — ذخیره به‌صورت میلادی YYYY-MM-DD">
-        <Form type={formType} onSubmit={logSubmit("Date")} defaultValues={{ date: "" }}>
+      <FormCard
+        title="۱۲) FormDate"
+        description="تاریخ شمسی — ذخیره به‌صورت میلادی YYYY-MM-DD"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Date")}
+          defaultValues={{ date: "" }}
+        >
           <FormDate
             name="date"
             label="تاریخ شمسی"
@@ -425,8 +521,15 @@ export default function FormDemos() {
         </Form>
       </FormCard>
 
-      <FormCard title="۱۳) FormTime" description="انتخاب ساعت با پاپ‌آپ دنبال‌کننده اسکرول">
-        <Form type={formType} onSubmit={logSubmit("Time")} defaultValues={{ time: "08:00" }}>
+      <FormCard
+        title="۱۳) FormTime"
+        description="انتخاب ساعت با پاپ‌آپ دنبال‌کننده اسکرول"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Time")}
+          defaultValues={{ time: "08:00" }}
+        >
           <FormTime
             name="time"
             label="ساعت"
@@ -439,7 +542,11 @@ export default function FormDemos() {
       </FormCard>
 
       <FormCard title="۱۴) FormRadio" description="انتخاب از بین گزینه‌ها">
-        <Form type={formType} onSubmit={logSubmit("Radio")} defaultValues={{ gender: "" }}>
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Radio")}
+          defaultValues={{ gender: "" }}
+        >
           <FormRadio
             name="gender"
             label="جنسیت"
@@ -452,7 +559,11 @@ export default function FormDemos() {
       </FormCard>
 
       <FormCard title="۱۵) FormCheckbox" description="تیک تایید (boolean)">
-        <Form type={formType} onSubmit={logSubmit("Checkbox")} defaultValues={{ terms: false }}>
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Checkbox")}
+          defaultValues={{ terms: false }}
+        >
           <FormCheckbox
             name="terms"
             label="با شرایط و قوانین موافقم"
@@ -464,7 +575,11 @@ export default function FormDemos() {
       </FormCard>
 
       <FormCard title="۱۶) FormSwitch" description="سوییچ روشن/خاموش">
-        <Form type={formType} onSubmit={logSubmit("Switch")} defaultValues={{ notif: true }}>
+        <Form
+          type={formType}
+          onSubmit={logSubmit("Switch")}
+          defaultValues={{ notif: true }}
+        >
           <FormSwitch name="notif" label="دریافت اعلان‌ها" />
           <FormActions submitText="ثبت FormSwitch" />
         </Form>
@@ -473,7 +588,7 @@ export default function FormDemos() {
       {/* ====== آپلود فایل (تکی) ====== */}
       <FormCard
         title="۱۷) FormFileUpload (تکی)"
-        description='درگ‌اند‌دراپ + لودینگ هنگام آپلود + ایکون نوع فایل (PDF/Word/عکس/...) — با prop روی onUpload'
+        description="درگ‌اند‌دراپ + لودینگ هنگام آپلود + ایکون نوع فایل (PDF/Word/عکس/...) — با prop روی onUpload"
       >
         <Form
           type={formType}
@@ -498,7 +613,7 @@ export default function FormDemos() {
       {/* ====== آپلود چند فایل ====== */}
       <FormCard
         title="۱۸) FormFileUploadMultiple (چندتایی)"
-        description='چند فایل هم‌زمان — لودینگ برای هریک + پیش‌نمایش تصویر + ایکون نوع فایل'
+        description="چند فایل هم‌زمان — لودینگ برای هریک + پیش‌نمایش تصویر + ایکون نوع فایل"
       >
         <Form
           type={formType}
@@ -521,7 +636,7 @@ export default function FormDemos() {
       {/* ====== Textarea ====== */}
       <FormCard
         title="۱۹) FormTextarea (توضیحات)"
-        description='متن چندخطی — ارتفاع با پراپ rows قابل تنظیم است و با drag از گوشه هم قابل تغییر است'
+        description="متن چندخطی — ارتفاع با پراپ rows قابل تنظیم است و با drag از گوشه هم قابل تغییر است"
       >
         <Form
           type={formType}
@@ -567,7 +682,11 @@ export default function FormDemos() {
         title="۲۱) استایل دکمه‌های FormActions — آبی"
         description="با submitClassName و resetClassName می‌توانید استایل دکمه‌ها را کاملاً عوض کنید"
       >
-        <Form type={formType} onSubmit={logSubmit("ActionsBlue")} defaultValues={{ name: "" }}>
+        <Form
+          type={formType}
+          onSubmit={logSubmit("ActionsBlue")}
+          defaultValues={{ name: "" }}
+        >
           <FormInput name="name" label="نام" placeholder="نام را وارد کنید" />
           <FormActions
             submitText="ثبت آبی"
@@ -586,7 +705,11 @@ export default function FormDemos() {
           onSubmit={logSubmit("ActionsGradient")}
           defaultValues={{ email: "" }}
         >
-          <FormInput name="email" label="ایمیل" placeholder="example@test.com" />
+          <FormInput
+            name="email"
+            label="ایمیل"
+            placeholder="example@test.com"
+          />
           <FormActions
             submitText="ثبت"
             submitClassName={styles.customSubmitGradient}
@@ -605,13 +728,275 @@ export default function FormDemos() {
           onSubmit={logSubmit("AutoScroll")}
           defaultValues={{ f1: "", f2: "", f3: "", f4: "", f5: "" }}
         >
-          <FormInput name="f1" label="فیلد اول (الزامی)" placeholder="پر کنید" required />
-          <FormInput name="f2" label="فیلد دوم (الزامی)" placeholder="پر کنید" required />
-          <FormInput name="f3" label="فیلد سوم (الزامی)" placeholder="پر کنید" required />
-          <FormInput name="f4" label="فیلد چهارم (الزامی)" placeholder="پر کنید" required />
-          <FormInput name="f5" label="فیلد پنجم (الزامی)" placeholder="پر کنید" required />
+          <FormInput
+            name="f1"
+            label="فیلد اول (الزامی)"
+            placeholder="پر کنید"
+            required
+          />
+          <FormInput
+            name="f2"
+            label="فیلد دوم (الزامی)"
+            placeholder="پر کنید"
+            required
+          />
+          <FormInput
+            name="f3"
+            label="فیلد سوم (الزامی)"
+            placeholder="پر کنید"
+            required
+          />
+          <FormInput
+            name="f4"
+            label="فیلد چهارم (الزامی)"
+            placeholder="پر کنید"
+            required
+          />
+          <FormInput
+            name="f5"
+            label="فیلد پنجم (الزامی)"
+            placeholder="پر کنید"
+            required
+          />
           <FormActions submitText="ثبت و اسکرول" />
         </Form>
+      </FormCard>
+
+      {/* ====== کنترل دقیق ارتفاع Textarea ====== */}
+      <FormCard
+        title="۲۴) FormTextarea — کنترل دقیق ارتفاع"
+        description="با height / minHeight / maxHeight / resize ارتفاع را دقیقاً کنترل کنید؛ resize={false} درگ از گوشه را هم غیرفعال می‌کند"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("TextareaHeights")}
+          defaultValues={{ fixed: "", stretch: "", locked: "" }}
+        >
+          <FormTextarea
+            name="fixed"
+            label="ارتفاع ثابت (height + resize {false})"
+            placeholder="این باکس ارتفاع ثابت ۶۰px دارد و قابل تغییر نیست"
+            height={60}
+            resize={false}
+            minLength={5}
+            minLengthMessage="حداقل ۵ کاراکتر"
+          />
+          <FormTextarea
+            name="stretch"
+            label="کشسان با سقف (minHeight + maxHeight)"
+            placeholder="بین ۹۰ تا ۱۶۰ پیکسل تغییر می‌کند"
+            minHeight={90}
+            maxHeight={160}
+            resize="vertical"
+          />
+          <FormTextarea
+            name="locked"
+            label="بدون درگ (rows + resize {none})"
+            placeholder="فقط با rows مشخص می‌شود — ارتفاع ۲ ردیف"
+            rows={2}
+            resize="none"
+          />
+          <FormActions submitText="ثبت متن‌ها" />
+        </Form>
+      </FormCard>
+
+      {/* ====== سایزهای FormFileUpload ====== */}
+      <FormCard
+        title="۲۵) FormFileUpload — سایز sm / md / lg"
+        description="با prop با نام size اندازه‌ی دراپ‌زون و آیکون تغییر می‌کند"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("FileUploadSizes")}
+          defaultValues={{ fSmall: null, fMedium: null, fLarge: null }}
+        >
+          <div className={styles.sizeRow}>
+            <div>
+              <span className={styles.sizeLabel}>size=&quot;sm&quot;</span>
+              <FormFileUpload
+                name="fSmall"
+                size="sm"
+                accept="image/*"
+                onUpload={() => new Promise((r) => setTimeout(r, 1200))}
+              />
+            </div>
+            <div>
+              <span className={styles.sizeLabel}>size=&quot;md&quot; (پیش‌فرض)</span>
+              <FormFileUpload
+                name="fMedium"
+                size="md"
+                accept="image/*"
+                onUpload={() => new Promise((r) => setTimeout(r, 1200))}
+              />
+            </div>
+            <div>
+              <span className={styles.sizeLabel}>size=&quot;lg&quot;</span>
+              <FormFileUpload
+                name="fLarge"
+                size="lg"
+                accept="image/*"
+                onUpload={() => new Promise((r) => setTimeout(r, 1200))}
+              />
+            </div>
+          </div>
+          <FormActions submitText="ثبت فایل‌ها" />
+        </Form>
+      </FormCard>
+
+      {/* ====== آواتار FormFileUpload ====== */}
+      <FormCard
+        title="۲۶) FormFileUpload — حالت آواتار (variant={avatar})"
+        description="دراپ‌زون دایره‌ای که با انتخاب تصویر، آن را به‌جای آیکون نمایش می‌دهد — کلیک دوباره برای تعویض یا مقداردهی"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("FileAvatar")}
+          defaultValues={{ avatar: null }}
+        >
+          <div className={styles.avatarWrap}>
+            <FormFileUpload
+              name="avatar"
+              label="تصویر پروفایل"
+              variant="avatar"
+              size="md"
+              accept="image/*"
+              acceptMessage="فقط تصویر مجاز است"
+              maxSize={2 * 1024 * 1024}
+              maxSizeMessage="حداکثر ۲ مگابایت"
+              onUpload={() => new Promise((r) => setTimeout(r, 1500))}
+              required
+              requiredMessage="انتخاب عکس پروفایل الزامی است"
+            />
+            <p className={styles.avatarNote}>
+              یک تصویر انتخاب کنید تا در دایره نمایش داده شود. عکس فقط جنبه‌ی
+              پیش‌نمایش دارد و مقدار نهایی فرم همان شیء File است — با onUpload
+              لودینگ (حلقه) روی آواتار نمایش داده می‌شود.
+            </p>
+          </div>
+          <FormActions submitText="ثبت پروفایل" />
+        </Form>
+      </FormCard>
+
+      {/* ====== دکمه‌های خارج از فرم ====== */}
+      <FormCard
+        title="۲۷) دکمه‌های خارج از فرم — اتصال با id"
+        description="با attribute توسّط `form` به دکمه‌ای بیرون از <Form> وصل شوید (ارسال طبق state فرم عمل می‌کند). غیرفعال‌سازی strict خارج از فرم در دسترس نیست؛ بازنشانی هم باید داخل فرم باشد یا با onReset انجام شود"
+      >
+        <Form
+          id="external-login"
+          type={formType}
+          onSubmit={logSubmit("ExternalSubmit")}
+          defaultValues={{ extUser: "", extPass: "" }}
+        >
+          <FormInput
+            name="extUser"
+            label="نام کاربری"
+            placeholder="خارج از فرم هم می‌توانید ثبت کنید"
+            required
+            requiredMessage="نام کاربری الزامی است"
+          />
+          <FormPassword
+            name="extPass"
+            label="رمز عبور"
+            placeholder="رمز عبور"
+            required
+            minLength={3}
+            minLengthMessage="حداقل ۳ کاراکتر"
+          />
+        </Form>
+        <div className={styles.externalBar}>
+          <span className={styles.externalLabel}>
+            این دکمه‌ها بیرون از {"<Form>"} هستند و با
+            form=&quot;external-login&quot; به آن وصل شده‌اند:
+          </span>
+          <FormActions
+            form="external-login"
+            showReset={false}
+            submitText="ثبت (خارجی)"
+          />
+        </div>
+        <FormSubmit
+          form="external-login"
+          className={styles.customSubmitGradient}
+          style={{ marginTop: 12 }}
+        >
+          دکمه‌ی Submit جداگانه
+        </FormSubmit>
+      </FormCard>
+
+      {/* ====== فایل CSS سراسری ====== */}
+      <FormCard
+        title="۲۸) فایل CSS سراسری مشترک myForm (globals.css)"
+        description="با انتقال پوشه‌ی myForm، متغیرهای تم و فونت را یک‌بار import کنید تا کل پروژه یکپارچه شود"
+      >
+        <p className={styles.note}>
+          <code>import &quot;component/myForm/globals.css&quot;</code> — این
+          فایل متغیرهای <code>--form-*</code> و فونت پیش‌فرض را روی{" "}
+          <code>:root</code> تعریف می‌کند. رنگ‌ها را در همان پروژه override کنید
+          تا تم همه‌ی فرم‌ها عوض شود:
+        </p>
+        <div className={styles.themeGrid}>
+          <div className={styles.themeItem}>
+            <span className={styles.themeName}>--form-primary</span>
+            <span className={styles.themeValue}>
+              <span
+                className={styles.swatch}
+                style={{ ["--swatch"]: "var(--form-primary)" }}
+              />
+              آبی اصلی
+            </span>
+          </div>
+          <div className={styles.themeItem}>
+            <span className={styles.themeName}>--form-primary-light</span>
+            <span className={styles.themeValue}>
+              <span
+                className={styles.swatch}
+                style={{ ["--swatch"]: "var(--form-primary-light)" }}
+              />
+              روشن
+            </span>
+          </div>
+          <div className={styles.themeItem}>
+            <span className={styles.themeName}>--form-success</span>
+            <span className={styles.themeValue}>
+              <span
+                className={styles.swatch}
+                style={{ ["--swatch"]: "var(--form-success)" }}
+              />
+              موفقیت
+            </span>
+          </div>
+          <div className={styles.themeItem}>
+            <span className={styles.themeName}>--form-error</span>
+            <span className={styles.themeValue}>
+              <span
+                className={styles.swatch}
+                style={{ ["--swatch"]: "var(--form-error)" }}
+              />
+              خطا
+            </span>
+          </div>
+          <div className={styles.themeItem}>
+            <span className={styles.themeName}>--form-radius</span>
+            <span className={styles.themeValue}>
+              <span
+                className={styles.swatch}
+                style={{ ["--swatch"]: "#fff", background: "none" }}
+              />
+              10px
+            </span>
+          </div>
+          <div className={styles.themeItem}>
+            <span className={styles.themeName}>--form-border</span>
+            <span className={styles.themeValue}>
+              <span
+                className={styles.swatch}
+                style={{ ["--swatch"]: "var(--form-border)" }}
+              />
+              حاشیه
+            </span>
+          </div>
+        </div>
       </FormCard>
     </div>
   );

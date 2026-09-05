@@ -192,3 +192,118 @@
 .customSubmitDanger:hover {
   background: #c62828 !important;
 }
+
+/* ---------- دموی سایزهای دراپ‌زون ---------- */
+.sizeRow {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.sizeRow > div {
+  flex: 1 1 180px;
+  min-width: 180px;
+}
+
+.sizeLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.72rem;
+  color: #8a94a0;
+  font-weight: 600;
+}
+
+/* ---------- دموی آواتار ---------- */
+.avatarWrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.avatarNote {
+  font-size: 0.78rem;
+  color: #75808c;
+  max-width: 320px;
+  line-height: 1.8;
+}
+
+/* ---------- دموی اتصال دکمه‌های خارجی ---------- */
+.externalBar {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px dashed var(--form-primary, #1976d2);
+  border-radius: 12px;
+  background: var(--form-primary-light, #e3f2fd);
+}
+
+.externalLabel {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.75rem;
+  color: var(--form-primary, #1976d2);
+  font-weight: 600;
+}
+
+/* ---------- دموی فایل CSS سراسری ---------- */
+.note {
+  padding: 12px 14px;
+  background: #f5f7fa;
+  border: 1px solid #e3e8ec;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  color: #3c4858;
+  line-height: 1.9;
+  direction: rtl;
+  margin-bottom: 16px;
+}
+
+.note code {
+  direction: ltr;
+  display: inline-block;
+  background: #eef1f4;
+  border-radius: 6px;
+  padding: 1px 7px;
+  font-size: 0.78rem;
+  color: #1976d2;
+}
+
+.themeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.themeItem {
+  border: 1px solid #e8ecef;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+}
+
+.themeName {
+  display: block;
+  font-size: 0.68rem;
+  color: #8a94a0;
+  direction: ltr;
+  text-align: left;
+  font-family: monospace;
+  margin-bottom: 6px;
+}
+
+.themeValue {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: #3c4858;
+}
+
+.swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--swatch, #ccc);
+}

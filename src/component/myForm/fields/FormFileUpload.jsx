@@ -41,6 +41,8 @@ export default function FormFileUpload({
   onUpload,
   uploadText = "در حال بارگذاری...",
   uploadDoneText = "بارگذاری شد",
+  size = "md",
+  variant = "upload",
   dragText,
   dragHint,
   browseText,
@@ -160,6 +162,8 @@ export default function FormFileUpload({
               accept={accept}
               disabled={disabled}
               error={!!fieldState.error}
+              size={size}
+              variant={variant}
               dragText={dragText}
               dragHint={dragHint}
               browseText={browseText}

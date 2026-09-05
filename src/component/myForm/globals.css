@@ -1,0 +1,59 @@
+/* ============================================================
+   فایل CSS سراسری مشترک کامپوننت‌های myForm
+   ------------------------------------------------------------
+   با انتقال پوشه‌ی myForm به هر پروژه‌ای، کافی است این فایل را
+   یک‌بار در root پروژه import کنید تا همه‌ی متغیرهای تم و استایل
+   پایه اعمال شود:
+
+   import "component/myForm/globals.css";
+
+   این فایل تنها متغیرها و استایل‌های پایه را تعریف می‌کند و
+   می‌توانید مقادیر را در همان پروژه override کنید.
+   ============================================================ */
+
+:root {
+  /* متغیرهای فونت */
+  --font-fa: "DanaFaNum", "Tahoma", sans-serif;
+  --font-fa-code: "DanaFaNum", monospace;
+
+  /* متغیرهای رنگ فرم */
+  --form-primary: #1976d2;
+  --form-primary-light: #e3f2fd;
+  --form-primary-hover: #115293;
+  --form-success: #4caf50;
+  --form-success-hover: #388e3c;
+  --form-error: #d32f2f;
+  --form-border: #e0e0e0;
+  --form-border-hover: #b0bec5;
+  --form-disabled-bg: #f5f5f5;
+  --form-text: #333;
+  --form-placeholder: #9e9e9e;
+  --form-radius: 10px;
+
+  /* آپلود فایل */
+  --form-upload-bg: #f4f6f8;
+}
+
+html {
+  font-family: var(--font-fa);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-fa);
+  color: #222;
+  background: #fafafa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: var(--font-fa);
+}

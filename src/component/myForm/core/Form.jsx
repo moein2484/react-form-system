@@ -12,6 +12,8 @@ export default function Form({
   onSubmit,
   defaultValues = {},
   className,
+  id,
+  ...rest
 }) {
   // اگر schema ارائه شد، از آن استفاده می‌کنیم
   // در غیر این صورت، از validation در سطح Field استفاده می‌شود
@@ -66,7 +68,7 @@ export default function Form({
       getValues={getValues}
       watch={watch}
     >
-      <form onSubmit={submitHandler} className={className}>
+      <form id={id} onSubmit={submitHandler} className={className} {...rest}>
         {children}
       </form>
     </FormProvider>

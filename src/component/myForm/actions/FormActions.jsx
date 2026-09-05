@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormContext } from "../core/FormProvider";
+import { useOptionalFormContext } from "../core/FormProvider";
 import FormSubmit from "./FormSubmit";
 import styles from "./Actions.module.css";
 
@@ -17,12 +17,15 @@ export default function FormActions({
   resetStyle,
   submitProps,
   resetProps,
+  form,
   ...rest
 }) {
-  const { reset, formState } = useFormContext();
+  const context = useOptionalFormContext();
 
   const handleReset = () => {
-    reset();
+    if (context) {
+      context.reset();
+    }
     if (onReset) onReset();
   };
 
@@ -32,17 +35,19 @@ export default function FormActions({
         <>
           {showReset && (
             <button
-              type="button"
+              type={context ? "button" : "reset"}
+              form={context ? undefined : form}
               onClick={handleReset}
               className={`${styles.resetButton} ${resetClassName || ""}`}
               style={resetStyle}
-              disabled={formState.isSubmitting}
+              disabled={context ? context.formState.isSubmitting : false}
               {...resetProps}
             >
               {resetText}
             </button>
           )}
           <FormSubmit
+            form={form}
             className={submitClassName}
             style={submitStyle}
             {...submitProps}

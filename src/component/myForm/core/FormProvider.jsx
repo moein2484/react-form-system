@@ -19,3 +19,9 @@ export const useFormContext = () => {
   }
   return context;
 };
+
+// نسخه‌ی اختیاری که وقتی کامپوننت خارج از <Form> است به‌جای throw، null برمی‌گرداند
+// (برای اتصال دکمه‌های خارجی به فرم با attribute توسّط `form`)
+export const useOptionalFormContext = () => {
+  return useContext(FormContext);
+};
