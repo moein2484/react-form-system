@@ -1,21 +1,31 @@
 .button {
-  border: 1px solid #ccc;
-  border-radius: 10px;
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid var(--form-border, #e0e0e0);
+  border-radius: var(--form-radius, 10px);
+  font-size: 0.82rem;
+  box-sizing: border-box;
   direction: rtl;
-  font-size: 0.8rem;
-  padding: 8px 12px;
+  text-align: right;
   background: white;
+  color: #222;
   cursor: pointer;
-  min-width: 64px;
-  text-align: center;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.button:hover {
-  border-color: #999;
+.button:hover:not(:disabled) {
+  border-color: var(--form-border-hover, #b0bec5);
+}
+
+.button:focus {
+  outline: none;
+  border-color: var(--form-primary, #1976d2);
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.12);
 }
 
 .button:disabled {
-  background-color: #f5f5f5;
+  background-color: var(--form-disabled-bg, #f5f5f5);
   cursor: not-allowed;
   opacity: 0.7;
 }
@@ -72,6 +82,19 @@
 .buttonInline {
   flex: 1;
   min-width: 0;
+  min-height: 42px;
   border: none;
   border-radius: 0;
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  text-align: right;
+  background: transparent;
+  color: #222;
+  cursor: pointer;
+  outline: none;
+}
+
+.buttonInline:disabled {
+  cursor: not-allowed;
+  color: #666;
 }

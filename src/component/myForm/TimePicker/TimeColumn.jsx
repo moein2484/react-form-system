@@ -20,6 +20,8 @@ export default function TimeColumn({ label, items, value, onChange }) {
           return (
             <MotionButton
               key={item}
+              type="button"
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => onChange(item)}
               className={`${styles.itemButton} ${isActive ? styles.active : ""}`}
             >

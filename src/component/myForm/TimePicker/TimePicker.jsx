@@ -25,6 +25,7 @@ export default function TimePicker({ value = "08:00", onChange, onClose }) {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       className={styles.paper}
+      onSubmitCapture={(e) => e.preventDefault()}
     >
       <div className={styles.columnsContainer}>
         <TimeColumn

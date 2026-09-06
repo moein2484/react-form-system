@@ -11,6 +11,7 @@ export default function ActionButtons({ onConfirm, onCancel }) {
       <MotionButton
         type="button"
         whileTap={{ scale: 0.95 }}
+        onMouseDown={(e) => e.preventDefault()}
         onClick={onCancel}
         className={styles.cancelButton}
       >
@@ -20,6 +21,7 @@ export default function ActionButtons({ onConfirm, onCancel }) {
       <MotionButton
         type="button"
         whileTap={{ scale: 0.95 }}
+        onMouseDown={(e) => e.preventDefault()}
         onClick={onConfirm}
         className={styles.confirmButton}
       >
