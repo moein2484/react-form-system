@@ -16,6 +16,11 @@ export default function FormNumber({
   max,
   maxMessage,
   step,
+  minLength,
+  minLengthMessage,
+  maxLength,
+  maxLengthMessage,
+  asString = false,
   validate,
   disabled,
   readOnly,
@@ -30,31 +35,67 @@ export default function FormNumber({
 
   // ساختن rules برای validation
   const rules = {};
-  
+
   if (required) {
     rules.required = requiredMessage;
   }
-  
-  if (min !== undefined) {
-    rules.min = {
-      value: min,
-      message: minMessage || `مقدار باید حداقل ${min} باشد`
-    };
-  }
-  
-  if (max !== undefined) {
-    rules.max = {
-      value: max,
-      message: maxMessage || `مقدار باید حداکثر ${max} باشد`
-    };
-  }
-  
-  if (validate) {
-    rules.validate = validate;
+
+  if (asString) {
+    // حالت رشته‌ای — مقدار به‌صورت string ذخیره می‌شود تا با schemaهای
+    // z.string() (مثل کد ملی، کد پستی و...) سازگار باشد
+    if (min !== undefined || max !== undefined) {
+      rules.validate = {
+        range: (v) => {
+          const parsed = v === "" || v == null ? NaN : Number(v);
+          if (min !== undefined && (Number.isNaN(parsed) || parsed < min))
+            return minMessage || `مقدار باید حداقل ${min} باشد`;
+          if (max !== undefined && (Number.isNaN(parsed) || parsed > max))
+            return maxMessage || `مقدار باید حداکثر ${max} باشد`;
+          return true;
+        },
+        ...(validate ? { custom: validate } : {}),
+      };
+    } else if (validate) {
+      rules.validate = validate;
+    }
+
+    if (minLength) {
+      rules.minLength = {
+        value: minLength,
+        message: minLengthMessage || `حداقل ${minLength} کاراکتر`,
+      };
+    }
+    if (maxLength) {
+      rules.maxLength = {
+        value: maxLength,
+        message: maxLengthMessage || `حداکثر ${maxLength} کاراکتر`,
+      };
+    }
+  } else {
+    if (min !== undefined) {
+      rules.min = {
+        value: min,
+        message: minMessage || `مقدار باید حداقل ${min} باشد`
+      };
+    }
+
+    if (max !== undefined) {
+      rules.max = {
+        value: max,
+        message: maxMessage || `مقدار باید حداکثر ${max} باشد`
+      };
+    }
+
+    if (validate) {
+      rules.validate = validate;
+    }
   }
 
   const title = labelShort || label;
   const inline = Boolean(labelShort);
+
+  const handleChange = (field, e) =>
+    field.onChange(asString ? e.target.value : e.target.valueAsNumber);
 
   return (
     <Controller
@@ -86,7 +127,7 @@ export default function FormNumber({
                 min={min}
                 max={max}
                 step={step}
-                onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                onChange={(e) => handleChange(field, e)}
                 className={`${styles.inputInline} ${fieldState.error ? styles.error : ""} ${className || ""}`}
                 {...rest}
               />
@@ -101,7 +142,7 @@ export default function FormNumber({
               min={min}
               max={max}
               step={step}
-              onChange={(e) => field.onChange(e.target.valueAsNumber)}
+              onChange={(e) => handleChange(field, e)}
               className={`${styles.input} ${fieldState.error ? styles.error : ""} ${className || ""}`}
               {...rest}
             />

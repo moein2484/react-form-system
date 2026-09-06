@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
+import { z } from "zod";
 import {
   Form,
   FormInput,
@@ -89,6 +90,11 @@ const initialProjects = [
   { id: "p1", name: "پروژه آلفا" },
   { id: "p2", name: "پروژه بتا" },
 ];
+
+const nationalCodeSchema = z.object({
+  nationalCode: z.string().min(10, "کد ملی باید ۱۰ رقم باشد"),
+  postalCode: z.string().min(10, "کد پستی باید ۱۰ رقم باشد"),
+});
 
 function FormCard({ title, description, children }) {
   return (
@@ -483,6 +489,7 @@ export default function FormDemos() {
             placeholder="تاریخ را انتخاب کنید"
             required
             requiredMessage="تاریخ الزامی است"
+            // style={{border:"1px solid #eee"}}
           />
           <FormTime
             name="lsTime"
@@ -1001,6 +1008,41 @@ export default function FormDemos() {
             </span>
           </div>
         </div>
+      </FormCard>
+
+      {/* ====== FormNumber خروجی رشته ====== */}
+      <FormCard
+        title="۲۹) FormNumber — خروجی رشته‌ای (asString)"
+        description="برای فیلدهایی مثل کد ملی که در schema از نوع string هستند. بدون asString خروجی number است و با z.string() خطای «Expected string, received number» می‌دهد؛ با asString مقدار رشته می‌شود و با minLength چک می‌شود"
+      >
+        <Form
+          schema={nationalCodeSchema}
+          type={formType}
+          onSubmit={logSubmit("AsString")}
+          defaultValues={{ nationalCode: "", postalCode: "" }}
+        >
+          <FormNumber
+            name="nationalCode"
+            label="کد ملی"
+            required
+            requiredMessage="کد ملی الزامی است"
+            placeholder="مثال: ۱۲۳۴۵۶۷۸۹۰"
+            asString
+            minLength={10}
+            minLengthMessage="کد ملی باید ۱۰ رقم باشد"
+          />
+          <FormNumber
+            name="postalCode"
+            label="کد پستی"
+            required
+            requiredMessage="کد پستی الزامی است"
+            placeholder="مثال: ۱۲۳۴۵۶۷۸۹۰"
+            asString
+            minLength={10}
+            minLengthMessage="کد پستی باید ۱۰ رقم باشد"
+          />
+          <FormActions submitText="ثبت کدها" />
+        </Form>
       </FormCard>
     </div>
   );
