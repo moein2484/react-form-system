@@ -514,7 +514,7 @@ export default function FormDemos() {
 
       <FormCard
         title="۱۲) FormDate"
-        description="تاریخ شمسی — ذخیره به‌صورت میلادی YYYY-MM-DD"
+        description="تاریخ شمسی — ذخیره به‌صورت میلادی YYYY-MM-DD — با استایل استاندارد input (border، گردی گوشه، عرض ۱۰۰٪)"
       >
         <Form
           type={formType}

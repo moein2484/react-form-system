@@ -57,7 +57,7 @@ const ShamsiDatePicker = forwardRef(
               {required && <span className={styles.inlineRequiredMark}>*</span>}
             </span>
           )}
-          <div className={styles.dateInputWrap}>
+          <div className={`${styles.dateInputWrap} ${inlineLabel || labelShort ? styles.dateInputInline : styles.dateInputNorm}`}>
             <DatePicker
               ref={ref}
               calendar={persian}
@@ -71,14 +71,18 @@ const ShamsiDatePicker = forwardRef(
               inputClass={`shamsi-datepicker-input${error ? " shamsi-datepicker-error" : ""}`}
               style={{
                 width: "100%",
-                height: size === "small" ? 40 : 48,
-                borderRadius: "10px",
-                border: "none",
-                padding: (inlineLabel || labelShort) ? "0 12px 0 12px" : "0 12px",
+                height: size === "small" ? 42 : 48,
+                borderRadius: "var(--form-radius, 10px)",
+                border: (inlineLabel || labelShort)
+                  ? "none"
+                  : "1px solid var(--form-border, #e0e0e0)",
+                padding: "0 12px",
                 fontSize: "0.85rem",
                 fontFamily: "var(--font-fa)",
                 outline: "none",
                 boxSizing: "border-box",
+                background: "#fff",
+                color: "#222",
               }}
               {...rest}
             />
