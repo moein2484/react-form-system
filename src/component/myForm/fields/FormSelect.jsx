@@ -26,6 +26,7 @@ export default function FormSelect({
   addItemLabel,
   onAddItem,
   multiple = false,
+  minDropdownWidth,
   className,
   ...rest
 }) {
@@ -89,6 +90,7 @@ export default function FormSelect({
             addItemLabel={addItemLabel}
             onAddItem={onAddItem}
             multiple={multiple}
+            minDropdownWidth={minDropdownWidth}
             inlineLabel={inline ? title : undefined}
             required={required}
             error={!!fieldState.error}

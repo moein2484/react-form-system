@@ -214,6 +214,22 @@
   }
 }
 
+/* باز شدن به سمت بالا (وقتی پایین فضا کافی نیست) */
+.dropdown.openUp {
+  animation-name: dropdownUpIn;
+}
+
+@keyframes dropdownUpIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ---------- جستجو ---------- */
 .searchContainer {
   position: sticky;

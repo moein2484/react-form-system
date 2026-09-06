@@ -33,6 +33,16 @@
   box-shadow: none;
 }
 
+/* دکمه Submit وقتی فرم (متصل با id) خطای اعتبارسنجی دارد */
+.submitButtonError {
+  background: var(--form-error, #d32f2f) !important;
+  box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3) !important;
+}
+
+.submitButtonError:hover:not(:disabled) {
+  background: #b71c1c !important;
+}
+
 .resetButton {
   padding: 11px 24px;
   background: #f7fbfd;

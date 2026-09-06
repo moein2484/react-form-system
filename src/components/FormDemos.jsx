@@ -194,7 +194,10 @@ export default function FormDemos() {
       </FormCard>
 
       {/* ====== FormSelect + جستجو ====== */}
-      <FormCard title="۲) FormSelect با جستجو" description="با پراپ searchable">
+      <FormCard
+        title="۲) FormSelect با جستجو"
+        description="با پراپ searchable — دراپ‌داون هوشمند است: اگر پایین فضا نباشد بالا باز می‌شود و در مودال هم روی همه‌چیز می‌آید (portal) — عرض ش لیست با minDropdownWidth قابل کنترل است"
+      >
         <Form
           type={formType}
           onSubmit={logSubmit("Searchable")}
@@ -210,6 +213,7 @@ export default function FormDemos() {
             options={cityOptions}
             valueKey="id"
             labelKey="name"
+            minDropdownWidth={240}
           />
           <FormActions submitText="ثبت FormSelect جستجو" />
         </Form>
@@ -880,7 +884,7 @@ export default function FormDemos() {
       {/* ====== دکمه‌های خارج از فرم ====== */}
       <FormCard
         title="۲۷) دکمه‌های خارج از فرم — اتصال با id"
-        description="با attribute توسّط `form` به دکمه‌ای بیرون از <Form> وصل شوید (ارسال طبق state فرم عمل می‌کند). غیرفعال‌سازی strict خارج از فرم در دسترس نیست؛ بازنشانی هم باید داخل فرم باشد یا با onReset انجام شود"
+        description="با attribute توسّط `form` به دکمه‌ای بیرون از <Form> وصل شوید (ارسال طبق state فرم عمل می‌کند). دکمه‌ی خارجی وضعیت فرم را می‌فهمد: موقع ارسال «در حال ارسال...» و بعد از خطای اعتبارسنجی قرمز می‌شود"
       >
         <Form
           id="external-login"

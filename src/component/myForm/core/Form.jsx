@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider } from "./FormProvider";
@@ -27,6 +28,29 @@ export default function Form({
   });
 
   const { handleSubmit, formState, control, reset, setValue, getValues, watch } = formMethods;
+
+  const formRef = useRef(null);
+
+  // همگام‌سازی وضعیت اعتبارسنجی با DOM تا دکمه‌های خارجی (متصل با id) هم از خطا مطلع شوند
+  useEffect(() => {
+    const el = formRef.current;
+    if (!el) return;
+    const errorCount = Object.keys(formState.errors).length;
+    el.dataset.formErrors = String(errorCount);
+    el.dataset.formValid = String(errorCount === 0);
+    el.dataset.formSubmitting = String(Boolean(formState.isSubmitting));
+    if (id) {
+      window.dispatchEvent(
+        new CustomEvent("form:statechange", {
+          detail: {
+            formId: id,
+            hasErrors: errorCount > 0,
+            submitting: Boolean(formState.isSubmitting),
+          },
+        }),
+      );
+    }
+  }, [formState, id]);
 
   const formType = type;
 
@@ -68,7 +92,7 @@ export default function Form({
       getValues={getValues}
       watch={watch}
     >
-      <form id={id} onSubmit={submitHandler} className={className} {...rest}>
+      <form id={id} ref={formRef} onSubmit={submitHandler} className={className} {...rest}>
         {children}
       </form>
     </FormProvider>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import styles from "./SearchableSelect.module.css";
 
 const ArrowIcon = ({ open }) => (
@@ -42,9 +43,11 @@ export default function SearchableSelect({
   inlineLabel,
   required,
   error = false,
+  minDropdownWidth = 0,
 }) {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownPos, setDropdownPos] = useState(null);
   const selectRef = useRef(null);
   const dropdownRef = useRef(null);
 
@@ -120,6 +123,71 @@ export default function SearchableSelect({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
+
+  // محاسبه موقعیت هوشمند دراپ‌داون (بالا/پایین + محدود به viewport)
+  const computePosition = useCallback(() => {
+    const selectEl = selectRef.current;
+    const ddEl = dropdownRef.current;
+    if (!selectEl || !ddEl) return null;
+
+    const rect = selectEl.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const margin = 6;
+
+    const ddHeight = ddEl.offsetHeight || 0;
+    const spaceBelow = vh - rect.bottom;
+    const spaceAbove = rect.top;
+
+    // اگر پایین جا کافی نیست، بالا باز شو
+    const up = spaceBelow < ddHeight + margin && spaceAbove > spaceBelow;
+
+    const minW = Number(minDropdownWidth) || 0;
+    const width = Math.max(
+      80,
+      Math.min(Math.max(rect.width, minW), vw - 16),
+    );
+
+    const right = Math.min(
+      Math.max(8, vw - rect.right),
+      Math.max(8, vw - width - 8),
+    );
+
+    const style = { position: "fixed", right, width, zIndex: 20000 };
+    const avail = up ? spaceAbove : spaceBelow;
+    style[up ? "bottom" : "top"] =
+      (up ? vh - rect.top : rect.bottom) + margin;
+
+    const optionsEl = ddEl.querySelector(`.${styles.optionsContainer}`);
+    const searchH = optionsEl ? optionsEl.offsetTop : 0;
+    const optionsMaxHeight = Math.max(80, avail - margin - searchH);
+
+    return { style, up, optionsMaxHeight };
+  }, [minDropdownWidth]);
+
+  useLayoutEffect(() => {
+    let raf;
+
+    const recompute = () => {
+      if (!isOpen) {
+        setDropdownPos(null);
+        return;
+      }
+      setDropdownPos(computePosition());
+    };
+
+    raf = requestAnimationFrame(recompute);
+
+    window.addEventListener("resize", recompute);
+    window.addEventListener("scroll", recompute, true);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", recompute);
+      window.removeEventListener("scroll", recompute, true);
+    };
+  }, [isOpen, computePosition, filtered.length, loading]);
+
+  const dropdown = isOpen && typeof document !== "undefined";
 
   return (
     <div className={styles.formControl}>
@@ -208,104 +276,121 @@ export default function SearchableSelect({
       </div>
       </div>
 
-      {isOpen && (
-        <div ref={dropdownRef} className={styles.dropdown}>
-          {searchable && (
-            <div className={styles.searchContainer}>
-              <svg
-                className={styles.searchSvgIcon}
-                width="15"
-                height="15"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <circle
-                  cx="11"
-                  cy="11"
-                  r="7"
-                  stroke="currentColor"
-                  strokeWidth="2"
+      {dropdown &&
+        createPortal(
+          <div
+            ref={dropdownRef}
+            className={`${styles.dropdown} ${dropdownPos && dropdownPos.up ? styles.openUp : ""}`}
+            style={
+              dropdownPos
+                ? dropdownPos.style
+                : { visibility: "hidden", position: "fixed", top: -9999, left: -9999 }
+            }
+          >
+            {searchable && (
+              <div className={styles.searchContainer}>
+                <svg
+                  className={styles.searchSvgIcon}
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="11"
+                    cy="11"
+                    r="7"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  />
+                  <path
+                    d="M20 20l-3.5-3.5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <input
+                  type="text"
+                  className={styles.searchInput}
+                  placeholder="جستجو..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => e.stopPropagation()}
                 />
-                <path
-                  d="M20 20l-3.5-3.5"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <input
-                type="text"
-                className={styles.searchInput}
-                placeholder="جستجو..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onClick={(e) => e.stopPropagation()}
-                onKeyDown={(e) => e.stopPropagation()}
-              />
-            </div>
-          )}
-
-          <div className={styles.optionsContainer}>
-            {loading ? (
-              <div className={styles.optionItem}>{loadingText}</div>
-            ) : filtered.length === 0 ? (
-              <div className={styles.optionItem}>نتیجه‌ای یافت نشد</div>
-            ) : (
-              filtered.map((opt) => {
-                const optValue = opt[valueKey];
-                const isSelected = selectedValues.some(
-                  (v) => String(v) === String(optValue),
-                );
-                return (
-                  <div
-                    key={String(optValue)}
-                    className={`${styles.optionItem} ${
-                      isSelected ? styles.selected : ""
-                    }`}
-                    onClick={() => handleOptionClick(optValue)}
-                  >
-                    {multiple && (
-                      <span
-                        className={`${styles.checkMark} ${
-                          isSelected ? styles.checkMarkActive : ""
-                        }`}
-                      >
-                        {isSelected && (
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                            <path
-                              d="M5 12l4 4L19 6"
-                              stroke="currentColor"
-                              strokeWidth="2.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        )}
-                      </span>
-                    )}
-                    <span className={styles.optionContent}>
-                      {renderContent ? renderContent(opt) : opt[labelKey]}
-                    </span>
-                  </div>
-                );
-              })
-            )}
-
-            {onAddItem && (
-              <div
-                className={styles.addItemButton}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddItem();
-                }}
-              >
-                <span className={styles.addItemIcon}>+</span>
-                {addItemLabel || "افزودن"}
               </div>
             )}
-          </div>
-        </div>
-      )}
+
+            <div
+              className={styles.optionsContainer}
+              style={
+                dropdownPos
+                  ? { maxHeight: dropdownPos.optionsMaxHeight }
+                  : undefined
+              }
+            >
+              {loading ? (
+                <div className={styles.optionItem}>{loadingText}</div>
+              ) : filtered.length === 0 ? (
+                <div className={styles.optionItem}>نتیجه‌ای یافت نشد</div>
+              ) : (
+                filtered.map((opt) => {
+                  const optValue = opt[valueKey];
+                  const isSelected = selectedValues.some(
+                    (v) => String(v) === String(optValue),
+                  );
+                  return (
+                    <div
+                      key={String(optValue)}
+                      className={`${styles.optionItem} ${
+                        isSelected ? styles.selected : ""
+                      }`}
+                      onClick={() => handleOptionClick(optValue)}
+                    >
+                      {multiple && (
+                        <span
+                          className={`${styles.checkMark} ${
+                            isSelected ? styles.checkMarkActive : ""
+                          }`}
+                        >
+                          {isSelected && (
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                              <path
+                                d="M5 12l4 4L19 6"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          )}
+                        </span>
+                      )}
+                      <span className={styles.optionContent}>
+                        {renderContent ? renderContent(opt) : opt[labelKey]}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
+
+              {onAddItem && (
+                <div
+                  className={styles.addItemButton}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddItem();
+                  }}
+                >
+                  <span className={styles.addItemIcon}>+</span>
+                  {addItemLabel || "افزودن"}
+                </div>
+              )}
+            </div>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

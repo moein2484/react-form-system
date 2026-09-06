@@ -1,10 +1,49 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useOptionalFormContext } from "../core/FormProvider";
 import styles from "./Actions.module.css";
 
+function useExternalFormState(formId) {
+  const [state, setState] = useState({ hasErrors: false, submitting: false });
+
+  useEffect(() => {
+    if (!formId) return;
+
+    const syncFromDom = () => {
+      const formEl = document.getElementById(formId);
+      if (!formEl) return;
+      setState({
+        hasErrors:
+          formEl.dataset.formErrors === "true" ||
+          Number(formEl.dataset.formErrors || 0) > 0,
+        submitting: formEl.dataset.formSubmitting === "true",
+      });
+    };
+
+    let raf = typeof window !== "undefined" ? requestAnimationFrame(syncFromDom) : 0;
+
+    const handleStateChange = (e) => {
+      if (!e.detail || e.detail.formId !== formId) return;
+      setState({
+        hasErrors: Boolean(e.detail.hasErrors),
+        submitting: Boolean(e.detail.submitting),
+      });
+    };
+
+    window.addEventListener("form:statechange", handleStateChange);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("form:statechange", handleStateChange);
+    };
+  }, [formId]);
+
+  return state;
+}
+
 export default function FormSubmit({ children, className, style, form, ...rest }) {
   const context = useOptionalFormContext();
+  const externalState = useExternalFormState(form);
 
   // خارج از <Form> — اتصال از طریق attribute توسّط `form`
   if (!context) {
@@ -13,15 +52,17 @@ export default function FormSubmit({ children, className, style, form, ...rest }
         "FormSubmit خارج از Form استفاده شده است؛ برای اتصال به فرم باید prop «form» (شناسه‌ی فرم) را بدهید.",
       );
     }
+    const { hasErrors, submitting } = externalState;
     return (
       <button
         type="submit"
         form={form}
+        disabled={submitting}
         style={style}
-        className={`${styles.submitButton} ${className || ""}`}
+        className={`${styles.submitButton} ${hasErrors ? styles.submitButtonError : ""} ${submitting ? styles.disabled : ""} ${className || ""}`}
         {...rest}
       >
-        {children || "ارسال"}
+        {submitting ? "در حال ارسال..." : children || "ارسال"}
       </button>
     );
   }
