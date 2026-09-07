@@ -233,7 +233,7 @@ export default function FormDemos() {
         <Form
           type={formType}
           onSubmit={logSubmit("MultiSelect")}
-          defaultValues={{ hobbies: [] }}
+          defaultValues={{ hobbies: ["sport"] }}
         >
           <FormSelect
             name="hobbies"
@@ -832,7 +832,9 @@ export default function FormDemos() {
               />
             </div>
             <div>
-              <span className={styles.sizeLabel}>size=&quot;md&quot; (پیش‌فرض)</span>
+              <span className={styles.sizeLabel}>
+                size=&quot;md&quot; (پیش‌فرض)
+              </span>
               <FormFileUpload
                 name="fMedium"
                 size="md"
