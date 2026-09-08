@@ -99,8 +99,15 @@ export default function SearchableSelect({
     onChange(next);
   };
 
+  const closeDropdown = useCallback(() => {
+    setSearch("");
+    setIsOpen(false);
+  }, []);
+
   const handleAddItem = () => {
-    if (onAddItem) onAddItem();
+    // تابع مشترک «بستن لیست» به onAddItem داده می‌شود تا مصرف‌کننده بتواند
+    // مثلاً بعد از بازکردن مودال، لیست آیتم‌ها را ببندد.
+    if (onAddItem) onAddItem(closeDropdown);
   };
 
   const isEmpty = selectedValues.length === 0 && !loading;

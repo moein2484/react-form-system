@@ -133,6 +133,7 @@ export default function FormDemos() {
   const [formType, setFormType] = useState("normal");
   const [projects, setProjects] = useState(initialProjects);
   const [newProjectName, setNewProjectName] = useState("");
+  const [addModalOpen, setAddModalOpen] = useState(false);
 
   const handleAddProject = () => {
     const name = newProjectName.trim();
@@ -142,6 +143,14 @@ export default function FormDemos() {
     }
     setProjects((prev) => [...prev, { id: `p${Date.now()}`, name }]);
     setNewProjectName("");
+  };
+
+  const confirmAddFromModal = () => {
+    const name = newProjectName.trim();
+    if (!name) return;
+    setProjects((prev) => [...prev, { id: `p${Date.now()}`, name }]);
+    setNewProjectName("");
+    setAddModalOpen(false);
   };
 
   return (
@@ -1092,6 +1101,76 @@ export default function FormDemos() {
             <FormActions submitText="ثبت باریک" />
           </Form>
         </div>
+      </FormCard>
+
+      {/* ====== بستن لیست از داخل onAddItem ====== */}
+      <FormCard
+        title="۳۱) FormSelect — بستن لیست از داخل onAddItem"
+        description="تابع مشترک «بستن لیست» به onAddItem پاس داده می‌شود: onAddItem={(close) => { close(); /* باز کردن مودال */ }} — با کلیک روی گزینه‌ی آخر (افزودن) لیست آیتم‌ها بسته می‌شود و مودال باز می‌شود"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("AddItemModal")}
+          defaultValues={{ project: "" }}
+        >
+          <FormSelect
+            name="project"
+            label="پروژه (با مودال افزودن)"
+            placeholder="پروژه را انتخاب کنید"
+            required
+            requiredMessage="پروژه الزامی است"
+            searchable
+            options={projects}
+            valueKey="id"
+            labelKey="name"
+            addItemLabel="افزودن پروژه جدید (با مودال)"
+            onAddItem={(close) => {
+              close();
+              setAddModalOpen(true);
+            }}
+          />
+          <FormActions submitText="ثبت پروژه" />
+        </Form>
+
+        {addModalOpen && (
+          <div
+            className={styles.modalOverlay}
+            onClick={() => setAddModalOpen(false)}
+          >
+            <div
+              className={styles.modal}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h4 className={styles.modalTitle}>افزودن پروژه جدید</h4>
+              <input
+                autoFocus
+                value={newProjectName}
+                onChange={(e) => setNewProjectName(e.target.value)}
+                placeholder="نام پروژه"
+                className={styles.modalInput}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") confirmAddFromModal();
+                }}
+              />
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  className={styles.modalCancel}
+                  onClick={() => setAddModalOpen(false)}
+                >
+                  انصراف
+                </button>
+                <button
+                  type="button"
+                  className={styles.modalConfirm}
+                  onClick={confirmAddFromModal}
+                >
+                  افزودن
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </FormCard>
     </div>
   );

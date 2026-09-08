@@ -312,3 +312,70 @@
   width: 220px;
   max-width: 100%;
 }
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  width: 320px;
+  max-width: 90%;
+  direction: rtl;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.modalTitle {
+  margin: 0 0 14px 0;
+  color: var(--form-primary, #1976d2);
+  font-size: 0.95rem;
+}
+
+.modalInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--form-border, #e0e0e0);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  outline: none;
+  direction: rtl;
+}
+
+.modalInput:focus {
+  border-color: var(--form-primary, #1976d2);
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.12);
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.modalConfirm,
+.modalCancel {
+  border: none;
+  border-radius: 10px;
+  padding: 9px 18px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.modalConfirm {
+  background: var(--form-primary, #1976d2);
+  color: #fff;
+}
+
+.modalCancel {
+  background: #f0f2f5;
+  color: #555;
+}
