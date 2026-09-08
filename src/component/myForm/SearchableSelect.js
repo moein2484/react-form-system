@@ -197,7 +197,7 @@ export default function SearchableSelect({
       window.removeEventListener("resize", recompute);
       window.removeEventListener("scroll", recompute, true);
     };
-  }, [isOpen, computePosition, filtered.length, loading]);
+  }, [isOpen, computePosition, filtered.length, loading, value]);
 
   const dropdown = isOpen && typeof document !== "undefined";
 

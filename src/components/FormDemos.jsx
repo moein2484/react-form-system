@@ -38,7 +38,9 @@ const cityOptions = [
   { id: "4", name: "ساری" },
   { id: "5", name: "رشت" },
   { id: "6", name: "تبریز" },
-  { id: "7", name: "اهواز" },
+  { id: "8", name: "اهواز" },
+  { id: "9", name: "بندر عباس" },
+  { id: "10", name: "علی آباد" },
 ];
 
 const hobbyOptions = [
@@ -207,13 +209,14 @@ export default function FormDemos() {
         <Form
           type={formType}
           onSubmit={logSubmit("Searchable")}
-          defaultValues={{ city: "3" }}
+          defaultValues={{ city: ["1" , "2" , "3" , "4",  "5"] }}
         >
           <FormSelect
             name="city"
             label="شهر"
             placeholder="شهر را جستجو و انتخاب کنید"
             required
+            multiple
             requiredMessage="شهر الزامی است"
             searchable
             options={cityOptions}
@@ -1045,6 +1048,50 @@ export default function FormDemos() {
           />
           <FormActions submitText="ثبت کدها" />
         </Form>
+      </FormCard>
+
+      {/* ====== سقف ارتفاع input و اسکرول داخلی ====== */}
+      <FormCard
+        title="۳۰) FormSelect — سقف ارتفاع input و اسکرول داخلی چیپ‌ها"
+        description="با آیتم‌های زیاد، ارتفاع خود input تا سقف (حدود ۲ ردیف) می‌شود و بقیه داخل همان input اسکرول می‌خورد؛ ارتفاع فرم بیش از این کشیده نمی‌شود. حالت باریک (+ جستجو) هم در کادر ۲۲۰px تست شده"
+      >
+        <Form
+          type={formType}
+          onSubmit={logSubmit("ChipScrollWide")}
+          defaultValues={{ many: cityOptions.map((c) => c.id) }}
+        >
+          <FormSelect
+            name="many"
+            label="همه شهرها (چند انتخابی + جستجو، عرض معمولی)"
+            placeholder="شهر انتخاب کنید"
+            multiple
+            searchable
+            options={cityOptions}
+            valueKey="id"
+            labelKey="name"
+          />
+          <FormActions submitText="ثبت چیپ‌های زیاد" />
+        </Form>
+        <div className={styles.narrowWrap}>
+          <Form
+            type={formType}
+            onSubmit={logSubmit("ChipScrollNarrow")}
+            defaultValues={{ many: cityOptions.map((c) => c.id) }}
+          >
+            <FormSelect
+              name="many"
+              label="همه شهرها (چند انتخابی + جستجو، عرض باریک)"
+              placeholder="شهر انتخاب کنید"
+              multiple
+              searchable
+              options={cityOptions}
+              valueKey="id"
+              labelKey="name"
+              minDropdownWidth={280}
+            />
+            <FormActions submitText="ثبت باریک" />
+          </Form>
+        </div>
       </FormCard>
     </div>
   );

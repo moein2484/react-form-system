@@ -307,3 +307,8 @@
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: var(--swatch, #ccc);
 }
+
+.narrowWrap {
+  width: 220px;
+  max-width: 100%;
+}

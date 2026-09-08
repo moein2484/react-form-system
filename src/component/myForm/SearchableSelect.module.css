@@ -118,9 +118,28 @@
   flex: 1;
   display: flex;
   align-items: center;
+  align-content: flex-start;
   gap: 6px;
   flex-wrap: wrap;
   min-width: 0;
+  /* سقف ارتفاع: از این مقدار بیشتر نمی‌شود و داخل input اسکرول می‌خورد */
+  max-height: 84px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+}
+
+.selectedArea::-webkit-scrollbar {
+  width: 5px;
+}
+
+.selectedArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.selectedArea::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
 }
 
 .singleValue {
