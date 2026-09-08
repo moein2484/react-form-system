@@ -183,7 +183,7 @@ export default function FormDemos() {
         <Form
           type={formType}
           onSubmit={logSubmit("FormSelect")}
-          defaultValues={{ province: "" }}
+          defaultValues={{ province: "tehran" }}
         >
           <FormSelect
             name="province"
@@ -207,7 +207,7 @@ export default function FormDemos() {
         <Form
           type={formType}
           onSubmit={logSubmit("Searchable")}
-          defaultValues={{ city: "" }}
+          defaultValues={{ city: "3" }}
         >
           <FormSelect
             name="city"
@@ -233,7 +233,7 @@ export default function FormDemos() {
         <Form
           type={formType}
           onSubmit={logSubmit("MultiSelect")}
-          defaultValues={{ hobbies: ["sport"] }}
+          defaultValues={{ hobbies: ["sport", "book"] }}
         >
           <FormSelect
             name="hobbies"
@@ -274,7 +274,7 @@ export default function FormDemos() {
         <Form
           type={formType}
           onSubmit={logSubmit("AddItem")}
-          defaultValues={{ project: "" }}
+          defaultValues={{ project: "p1" }}
         >
           <FormSelect
             name="project"
@@ -301,7 +301,7 @@ export default function FormDemos() {
         <Form
           type={formType}
           onSubmit={logSubmit("Avatar")}
-          defaultValues={{ user: "" }}
+          defaultValues={{ user: "u1" }}
         >
           <FormSelect
             name="user"

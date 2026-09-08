@@ -116,11 +116,16 @@ export default function SearchableSelect({
         setIsOpen(false);
       }
     };
+    const handleEscape = (e) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleEscape);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen]);
 
@@ -166,7 +171,8 @@ export default function SearchableSelect({
   }, [minDropdownWidth]);
 
   useLayoutEffect(() => {
-    let raf;
+    let rafA;
+    let rafB;
 
     const recompute = () => {
       if (!isOpen) {
@@ -176,12 +182,18 @@ export default function SearchableSelect({
       setDropdownPos(computePosition());
     };
 
-    raf = requestAnimationFrame(recompute);
+    // چهارچوب اول: دراپ‌داون رندر شده ولی هنوز لِی‌اوت کامل نشده؛
+    // پس در فریم‌های دوم و بعد دوباره اندازه‌گیری می‌شود تا ارتفاع واقعی اعمال شود.
+    rafA = requestAnimationFrame(() => {
+      recompute();
+      rafB = requestAnimationFrame(recompute);
+    });
 
     window.addEventListener("resize", recompute);
     window.addEventListener("scroll", recompute, true);
     return () => {
-      cancelAnimationFrame(raf);
+      cancelAnimationFrame(rafA);
+      cancelAnimationFrame(rafB);
       window.removeEventListener("resize", recompute);
       window.removeEventListener("scroll", recompute, true);
     };

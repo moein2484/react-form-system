@@ -189,11 +189,6 @@
 
 /* ---------- dropdown ---------- */
 .dropdown {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
-  z-index: 1500;
   background: white;
   border-radius: 12px;
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
