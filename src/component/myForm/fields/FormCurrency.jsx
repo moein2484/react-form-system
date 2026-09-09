@@ -21,6 +21,7 @@ export default function FormCurrency({
   disabled,
   showPriceWords = false,
   priceWordsUnit = "تومان",
+  asString = false,
   className,
   ...rest
 }) {
@@ -84,6 +85,7 @@ export default function FormCurrency({
                   disabled={disabled}
                   inlineLabel={inline ? title : undefined}
                   required={required}
+                  asString={asString}
                   {...rest}
                 />
                 {priceWords ? (

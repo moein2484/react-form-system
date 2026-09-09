@@ -22,6 +22,7 @@ export default function CurrencyInput({
   disabled,
   inlineLabel,
   required,
+  asString = false,
   ...rest
 }) {
   const raw = stripNonDigits(value);
@@ -42,7 +43,7 @@ export default function CurrencyInput({
 
       setDisplay(newDisplay);
 
-      onChange?.(cleaned ? Number(cleaned) : "");
+      onChange?.(cleaned ? (asString ? cleaned : Number(cleaned)) : "");
 
       requestAnimationFrame(() => {
         const el = e.target;
@@ -55,7 +56,7 @@ export default function CurrencyInput({
         el.setSelectionRange(newPos, newPos);
       });
     },
-    [display, onChange],
+    [display, onChange, asString],
   );
 
   return (

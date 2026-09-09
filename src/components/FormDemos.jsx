@@ -98,6 +98,11 @@ const nationalCodeSchema = z.object({
   postalCode: z.string().min(10, "کد پستی باید ۱۰ رقم باشد"),
 });
 
+const priceWordsSchema = z.object({
+  amount: z.string().min(4, "مبلغ باید حداقل ۴ رقم باشد"),
+  amountLegacy: z.string().min(4, "مبلغ باید حداقل ۴ رقم باشد"),
+});
+
 function FormCard({ title, description, children }) {
   return (
     <section className={styles.card}>
@@ -218,14 +223,13 @@ export default function FormDemos() {
         <Form
           type={formType}
           onSubmit={logSubmit("Searchable")}
-          defaultValues={{ city: ["1" , "2" , "3" , "4",  "5"] }}
+          defaultValues={{ city: [] }}
         >
           <FormSelect
             name="city"
             label="شهر"
             placeholder="شهر را جستجو و انتخاب کنید"
             required
-            multiple
             requiredMessage="شهر الزامی است"
             searchable
             options={cityOptions}
@@ -1137,10 +1141,7 @@ export default function FormDemos() {
             className={styles.modalOverlay}
             onClick={() => setAddModalOpen(false)}
           >
-            <div
-              className={styles.modal}
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
               <h4 className={styles.modalTitle}>افزودن پروژه جدید</h4>
               <input
                 autoFocus
@@ -1171,6 +1172,37 @@ export default function FormDemos() {
             </div>
           </div>
         )}
+      </FormCard>
+
+      <FormCard
+        title="۳۲) FormCurrency — خروجی رشته‌ای (asString)"
+        description="بدون asString مقدار به صورت number ذخیره می‌شود و با schema ای که فیلد را z.string() تعریف کرده، خطای «Expected string, received number» می‌دهد. با asString مقدار string می‌شود (بدون جداکننده) و min/max و minLength درست کار می‌کنند — فیلد اول asString دارد، فیلد دوم همان مبلغ را بدون asString نشان می‌دهد"
+      >
+        <Form
+          schema={priceWordsSchema}
+          type={formType}
+          onSubmit={logSubmit("CurrencyAsString")}
+          defaultValues={{ amount: "", amountLegacy: "" }}
+        >
+          <FormCurrency
+            name="amount"
+            label="مبلغ (تومان) — asString"
+            placeholder="مبلغ را وارد کنید"
+            required
+            min={1000}
+            minMessage="مبلغ حداقل ۱۰۰۰"
+            showPriceWords
+            asString
+          />
+          <FormCurrency
+            name="amountLegacy"
+            label="مبلغ (تومان) — بدون asString"
+            placeholder="مبلغ را وارد کنید"
+            required
+            showPriceWords
+          />
+          <FormActions submitText="ثبت مبالغ" />
+        </Form>
       </FormCard>
     </div>
   );
