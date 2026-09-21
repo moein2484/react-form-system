@@ -14,34 +14,37 @@
   width: 100%;
 }
 
-:global(.shamsi-datepicker-container .rmdp-wrapper) {
+/* تقویم با portal داخل document.body رندر می‌شود (بیرون از container)،
+   پس استایل‌ها به کلاس خود تقویم (shamsi-datepicker-calendar) وصل‌اند. */
+:global(.shamsi-datepicker-calendar.rmdp-wrapper) {
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   border: 1px solid #e0e0e0;
+  font-family: var(--font-fa);
 }
 
-:global(.shamsi-datepicker-container .rmdp-header) {
+:global(.shamsi-datepicker-calendar .rmdp-header) {
   background: #1976d2;
   color: #fff;
   border-radius: 12px 12px 0 0;
   padding: 8px;
 }
 
-:global(.shamsi-datepicker-container .rmdp-arrow) {
+:global(.shamsi-datepicker-calendar .rmdp-arrow) {
   border-color: #fff;
 }
 
-:global(.shamsi-datepicker-container .rmdp-day.rmdp-today span) {
+:global(.shamsi-datepicker-calendar .rmdp-day.rmdp-today span) {
   background: #64b5f6;
   color: #1976d2;
 }
 
-:global(.shamsi-datepicker-container .rmdp-day.rmdp-selected span) {
+:global(.shamsi-datepicker-calendar .rmdp-day.rmdp-selected span) {
   background: #1976d2;
   color: #fff;
 }
 
-:global(.shamsi-datepicker-container .rmdp-week-day) {
+:global(.shamsi-datepicker-calendar .rmdp-week-day) {
   color: #1976d2;
   font-weight: 700;
 }

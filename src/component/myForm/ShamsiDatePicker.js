@@ -67,6 +67,11 @@ const ShamsiDatePicker = forwardRef(
               placeholder={placeholder}
               calendarPosition="bottom-right"
               format="YYYY/MM/DD"
+              // تقویم به document.body منتقل می‌شود (مثل FormSelect) تا داخل مودال/کانتینرهای
+              // دارای overflow بریده نشود و روی همه‌چیز نمایش داده شود.
+              portal
+              zIndex={20000}
+              className="shamsi-datepicker-calendar"
               containerClassName="shamsi-datepicker-container"
               inputClass={`shamsi-datepicker-input${error ? " shamsi-datepicker-error" : ""}`}
               style={{

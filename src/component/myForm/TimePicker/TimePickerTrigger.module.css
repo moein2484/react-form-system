@@ -43,12 +43,14 @@
 
 /* ---------- حالت فرم inline (لیبل داخل outline) ---------- */
 .triggerWrap {
-  display: inline-block;
+  display: block;
+  width: 100%;
 }
 
 .inlineWrap {
   display: flex;
   align-items: stretch;
+  width: 100%;
   border: 1px solid var(--form-border, #e0e0e0);
   border-radius: var(--form-radius, 10px);
   background: white;
