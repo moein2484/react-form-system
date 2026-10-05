@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -70,7 +70,7 @@ const customizationExamples = [
   {
     title: "FormTime", component: FormTime, value: "09:30",
     props: { label: "ساعت سفارشی",
-      styles: { button: { background: "#f5f3ff", borderColor: "#7c3aed", borderRadius: 16 }, paper: { background: "#faf5ff", borderRadius: 12 }, active: { background: "#7c3aed" }, confirmButton: { background: "#7c3aed" }, cancelButton: { color: "#7c3aed" } } },
+      styles: { button: { background: "#f5f3ff", borderColor: "#7c3aed", borderRadius: 16 }, paper: { background: "#faf5ff", borderRadius: 12 }, selectionBand: { background: "#ede9fe" }, active: { color: "#7c3aed" } } },
   },
   {
     title: "FormSelect", component: FormSelect, value: "",

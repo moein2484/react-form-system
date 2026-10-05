@@ -58,7 +58,7 @@ function TimePickerTrigger({ value, onChange, onBlur, inputRef, type, disabled, 
     {open && !disabled && createPortal(<Styled css={styles} ref={popup} className={styles.popper}
       style={{ ...position, maxHeight: "calc(100vh - 16px)", overflowY: "auto" }}>
       <TimePicker value={value || "08:00"} onChange={(next) => {
-        onChange?.(next); queueMicrotask(close);
+        onChange?.(next); queueMicrotask(() => onBlur?.());
       }} onClose={close} />
     </Styled>, document.body)}
   </>;

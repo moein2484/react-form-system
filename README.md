@@ -293,7 +293,7 @@ export default function Example() {
 
 ### 8) FormTime
 
-انتخاب ساعت با یک پیکر بازشودنی (دست‌ساز) شامل دو ستون ساعت و دقیقه. مقدار رشته `HH:mm` است (مثلا `"08:00"`).
+انتخاب ساعت با دو ستون چرخشی ساعت و دقیقه شبیه آیفون انجام می‌شود. مقدار وسط نوار کم‌رنگ با توقف اسکرول انتخاب و بدون تأیید اضافه ثبت می‌شود؛ کلیک روی اعداد نیز آن‌ها را به مرکز می‌آورد. کلیدهای بالا/پایین، Home/End و PageUp/PageDown پشتیبانی می‌شوند. پنجره با کلیک بیرون یا Escape بسته می‌شود. مقدار رشته `HH:mm` است (مثلا `"08:00"`). باز کردن پنجره به‌تنهایی مقدار فیلد خالی را تغییر نمی‌دهد.
 
 | پراپ | نوع | توضیح |
 |------|-----|-------|
@@ -644,7 +644,7 @@ This project is MIT licensed.
 | متن چندخطی | textarea؛ ارتفاع با rows/height/minHeight/maxHeight؛ resize=false یا none برای غیرفعال‌کردن تغییر اندازه |
 | انتخاب‌گر | formControl، selectContainer، dropdown، searchInput، optionsContainer، optionItem، selected، chip، chipRemove، placeholderText، arrowIcon، addItemButton |
 | تاریخ | input، inputInline، dateInputWrap، inlineWrap، label، error؛ classNames.calendar برای کل تقویم؛ classNames/styles.datePickerContainer برای ظرف کتابخانه |
-| ساعت | button، buttonInline، popper، paper، columnsContainer، itemButton، active، confirmButton، cancelButton |
+| ساعت | button، buttonInline، popper، paper، columnsContainer، wheelWrap، selectionBand، itemsContainer، itemButton، active |
 | رادیو/چک‌باکس/سوییچ | radioContainer، radioOption، radioInput، checkboxContainer، checkboxInput، switchContainer، switchInput |
 | فایل/آواتار | dropzone، dragging، avatar، icon، dragText، dragHint، fileList، fileItem، fileName، removeBtn، spinner، previewImg، avatarPreview، uploadError |
 | دکمه‌ها | actionsContainer، submitButton، resetButton، submitButtonError، disabled |

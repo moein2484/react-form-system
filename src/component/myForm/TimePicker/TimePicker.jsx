@@ -1,49 +1,27 @@
 "use client";
-
+import { useRef } from "react";
 import { Styled, withAppearance } from "../core/Appearance";
-import { motion } from "framer-motion";
 import TimeColumn from "./TimeColumn";
-import ActionButtons from "./ActionButtons";
-import { useTimePicker } from "./useTimePicker";
 import styles from "./TimePicker.module.css";
-const MotionDiv = motion.div;
-function TimePicker({
-  value = "08:00",
-  onChange,
-  onClose
-}) {
-  const {
-    tempTime,
-    setHour,
-    setMinute,
-    formatted
-  } = useTimePicker(value);
-  const hours = Array.from({
-    length: 24
-  }, (_, i) => i);
-  const minutes = Array.from({
-    length: 60
-  }, (_, i) => i);
-  const handleConfirm = () => {
-    onChange?.(formatted);
-    onClose?.();
+const hours = Array.from({ length: 24 }, (_, index) => index);
+const minutes = Array.from({ length: 60 }, (_, index) => index);
+function TimePicker({ value = "08:00", onChange }) {
+  const [hour, minute] = value.split(":").map(Number);
+  const pending = useRef(value);
+  const previous = useRef(value);
+  const change = (part, next) => {
+    if (previous.current !== value) pending.current = value;
+    previous.current = value;
+    const parts = pending.current.split(":");
+    parts[part] = String(next).padStart(2, "0");
+    pending.current = parts.join(":");
+    onChange?.(pending.current);
   };
-  return <Styled as={MotionDiv} css={styles} initial={{
-    opacity: 0,
-    scale: 0.9
-  }} animate={{
-    opacity: 1,
-    scale: 1
-  }} exit={{
-    opacity: 0,
-    scale: 0.9
-  }} className={styles.paper} onSubmitCapture={e => e.preventDefault()}>
-      <Styled as="div" css={styles} className={styles.columnsContainer}>
-        <TimeColumn label="ساعت" items={hours} value={tempTime.hour} onChange={setHour} />
-        <TimeColumn label="دقیقه" items={minutes} value={tempTime.minute} onChange={setMinute} />
-      </Styled>
-
-      <ActionButtons onConfirm={handleConfirm} onCancel={onClose} />
-    </Styled>;
+  return <Styled css={styles} className={styles.paper}>
+    <Styled css={styles} className={styles.columnsContainer}>
+      <TimeColumn label="ساعت" items={hours} value={hour} onChange={next => change(0, next)} />
+      <TimeColumn label="دقیقه" items={minutes} value={minute} onChange={next => change(1, next)} />
+    </Styled>
+  </Styled>;
 }
 export default withAppearance(TimePicker);
