@@ -1,10 +1,10 @@
 "use client";
 
+import { Styled, withAppearance } from "../core/Appearance";
 import { useFormContext } from "../core/FormProvider";
-import { Controller } from "react-hook-form";
+import Controller from "../core/FieldController";
 import styles from "./Field.module.css";
-
-export default function FormNumber({
+function FormNumber({
   name,
   label,
   labelShort,
@@ -27,48 +27,43 @@ export default function FormNumber({
   className,
   ...rest
 }) {
-  const { control } = useFormContext();
-
+  const {
+    control
+  } = useFormContext();
   if (!control) {
     throw new Error("FormNumber must be used within a Form");
   }
 
   // ساختن rules برای validation
   const rules = {};
-
-  if (required) {
-    rules.required = requiredMessage;
-  }
-
   if (asString) {
-    // حالت رشته‌ای — مقدار به‌صورت string ذخیره می‌شود تا با schemaهای
-    // z.string() (مثل کد ملی، کد پستی و...) سازگار باشد
+    // حالت رشته‌ای — مقدار به‌صورت string ذخیره می‌شود تا با مقادیر
+    // رشته‌ای (مثل کد ملی، کد پستی و...) سازگار باشد
     if (min !== undefined || max !== undefined) {
       rules.validate = {
-        range: (v) => {
+        range: v => {
           const parsed = v === "" || v == null ? NaN : Number(v);
-          if (min !== undefined && (Number.isNaN(parsed) || parsed < min))
-            return minMessage || `مقدار باید حداقل ${min} باشد`;
-          if (max !== undefined && (Number.isNaN(parsed) || parsed > max))
-            return maxMessage || `مقدار باید حداکثر ${max} باشد`;
+          if (min !== undefined && (Number.isNaN(parsed) || parsed < min)) return minMessage || `مقدار باید حداقل ${min} باشد`;
+          if (max !== undefined && (Number.isNaN(parsed) || parsed > max)) return maxMessage || `مقدار باید حداکثر ${max} باشد`;
           return true;
         },
-        ...(validate ? { custom: validate } : {}),
+        ...(validate ? {
+          custom: validate
+        } : {})
       };
     } else if (validate) {
       rules.validate = validate;
     }
-
     if (minLength) {
       rules.minLength = {
         value: minLength,
-        message: minLengthMessage || `حداقل ${minLength} کاراکتر`,
+        message: minLengthMessage || `حداقل ${minLength} کاراکتر`
       };
     }
     if (maxLength) {
       rules.maxLength = {
         value: maxLength,
-        message: maxLengthMessage || `حداکثر ${maxLength} کاراکتر`,
+        message: maxLengthMessage || `حداکثر ${maxLength} کاراکتر`
       };
     }
   } else {
@@ -78,80 +73,35 @@ export default function FormNumber({
         message: minMessage || `مقدار باید حداقل ${min} باشد`
       };
     }
-
     if (max !== undefined) {
       rules.max = {
         value: max,
         message: maxMessage || `مقدار باید حداکثر ${max} باشد`
       };
     }
-
     if (validate) {
       rules.validate = validate;
     }
   }
-
   const title = labelShort || label;
   const inline = Boolean(labelShort);
-
-  const handleChange = (field, e) =>
-    field.onChange(asString ? e.target.value : e.target.valueAsNumber);
-
-  return (
-    <Controller
-      name={name}
-      control={control}
-      rules={rules}
-      render={({ field, fieldState }) => (
-        <div className={styles.fieldContainer} data-form-field={name}>
-          {title && !inline && (
-            <label className={styles.label}>
+  const handleChange = (field, e) => field.onChange(e.target.value === "" ? "" : asString ? e.target.value : e.target.valueAsNumber);
+  return <Controller required={required} requiredMessage={requiredMessage} name={name} control={control} rules={rules} render={({
+    field,
+    fieldState
+  }) => <Styled as="div" css={styles} className={styles.fieldContainer} data-form-field={name}>
+          {title && !inline && <Styled as="label" css={styles} className={styles.label}>
               {title}
-              {required && <span className={styles.required}>*</span>}
-            </label>
-          )}
-          {inline ? (
-            <div className={`${styles.inlineWrap} ${disabled ? styles.disabled : ""}`}>
-              {title && (
-                <span className={styles.inlineLabel}>
+              {required && <Styled as="span" css={styles} className={styles.required}>*</Styled>}
+            </Styled>}
+          {inline ? <Styled as="div" css={styles} className={`${styles.inlineWrap} ${disabled ? styles.disabled : ""}`}>
+              {title && <Styled as="span" css={styles} className={styles.inlineLabel}>
                   {title}
-                  {required && <span className={styles.inlineRequiredMark}>*</span>}
-                </span>
-              )}
-              <input
-                {...field}
-                type="number"
-                placeholder={placeholder}
-                disabled={disabled}
-                readOnly={readOnly}
-                min={min}
-                max={max}
-                step={step}
-                onChange={(e) => handleChange(field, e)}
-                className={`${styles.inputInline} ${fieldState.error ? styles.error : ""} ${className || ""}`}
-                {...rest}
-              />
-            </div>
-          ) : (
-            <input
-              {...field}
-              type="number"
-              placeholder={placeholder}
-              disabled={disabled}
-              readOnly={readOnly}
-              min={min}
-              max={max}
-              step={step}
-              onChange={(e) => handleChange(field, e)}
-              className={`${styles.input} ${fieldState.error ? styles.error : ""} ${className || ""}`}
-              {...rest}
-            />
-          )}
-          {fieldState.error && (
-            <span className={styles.errorMessage}>{fieldState.error.message}</span>
-          )}
-        </div>
-      )}
-    />
-  );
+                  {required && <Styled as="span" css={styles} className={styles.inlineRequiredMark}>*</Styled>}
+                </Styled>}
+              <Styled as="input" css={styles} {...field} type="number" placeholder={placeholder} disabled={disabled} readOnly={readOnly} min={min} max={max} step={step} onChange={e => handleChange(field, e)} className={`${styles.inputInline} ${fieldState.error ? styles.error : ""} ${className || ""}`} {...rest} />
+            </Styled> : <Styled as="input" css={styles} {...field} type="number" placeholder={placeholder} disabled={disabled} readOnly={readOnly} min={min} max={max} step={step} onChange={e => handleChange(field, e)} className={`${styles.input} ${fieldState.error ? styles.error : ""} ${className || ""}`} {...rest} />}
+          {fieldState.error && <Styled as="span" css={styles} role="alert" className={styles.errorMessage}>{fieldState.error.message}</Styled>}
+        </Styled>} />;
 }
+export default withAppearance(FormNumber);

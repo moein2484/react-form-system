@@ -1,7 +1,11 @@
 .container {
   width: 100%;
   position: relative;
+  direction: rtl;
+  font-family: var(--font-fa, Tahoma, sans-serif);
 }
+
+.label { display: block; margin-bottom: 6px; font-size: 0.82rem; font-weight: 600; }
 
 .input {
   width: 100%;
@@ -9,6 +13,7 @@
   border-radius: var(--form-radius, 10px);
   background-color: white;
   font-size: 0.8rem;
+  font-family: inherit;
   border: 1px solid var(--form-border, #e0e0e0);
   box-sizing: border-box;
   padding: 10px 12px;
@@ -80,14 +85,25 @@
 
 .inputInline {
   flex: 1;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   min-height: 42px;
   border: none;
   background: transparent;
   font-size: 0.8rem;
+  font-family: inherit;
+  text-align: right;
+  direction: ltr;
   padding: 10px 12px;
   color: #222;
   outline: none;
 }
+
+.input.error,
+.inlineWrap.error { border-color: var(--form-error, #d32f2f); }
+.input.error:focus,
+.inlineWrap.error:focus-within { box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.12); }
 
 .inputInline:disabled {
   cursor: not-allowed;

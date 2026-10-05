@@ -1,98 +1,40 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { Styled, withAppearance } from "./core/Appearance";
 import styles from "./CurrencyInput.module.css";
 
-const stripNonDigits = (value) =>
-  String(value || "")
-    .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
-    .replace(/[^0-9]/g, "");
+const digits = (value) => String(value ?? "").replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[^0-9]/g, "");
+const format = (value) => value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-const addSeparators = (numStr) => {
-  if (!numStr) return "";
-  return numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
-
-export default function CurrencyInput({
-  value,
-  onChange,
-  label,
-  labelShort,
-  placeholder,
-  disabled,
-  inlineLabel,
-  required,
-  asString = false,
-  ...rest
-}) {
-  const raw = stripNonDigits(value);
-
-  const [display, setDisplay] = useState(() => addSeparators(raw));
-
-  useEffect(() => {
-    setDisplay(addSeparators(stripNonDigits(value)));
-  }, [value]);
-
-  const handleChange = useCallback(
-    (e) => {
-      const cursor = e.target.selectionStart;
-      const oldDisplay = display;
-
-      const cleaned = stripNonDigits(e.target.value);
-      const newDisplay = addSeparators(cleaned);
-
-      setDisplay(newDisplay);
-
-      onChange?.(cleaned ? (asString ? cleaned : Number(cleaned)) : "");
-
-      requestAnimationFrame(() => {
-        const el = e.target;
-
-        if (!el) return;
-
-        const diff = newDisplay.length - oldDisplay.length;
-        const newPos = cursor + diff;
-
-        el.setSelectionRange(newPos, newPos);
-      });
-    },
-    [display, onChange, asString],
-  );
-
-  return (
-    <div className={styles.container}>
-      {label && !inlineLabel && <label className={styles.label}>{label}</label>}
-      {inlineLabel ? (
-        <div className={`${styles.inlineWrap} ${disabled ? styles.disabled : ""}`}>
-          <span className={styles.inlineLabel}>
-            {inlineLabel}
-            {required && <span className={styles.inlineRequiredMark}>*</span>}
-          </span>
-          <input
-            type="text"
-            className={styles.inputInline}
-            value={display}
-            onChange={handleChange}
-            placeholder={placeholder}
-            disabled={disabled}
-            inputMode="numeric"
-            dir="ltr"
-            {...rest}
-          />
-        </div>
-      ) : (
-        <input
-          type="text"
-          className={styles.input}
-          value={display}
-          onChange={handleChange}
-          placeholder={placeholder}
-          disabled={disabled}
-          inputMode="numeric"
-          dir="ltr"
-          {...rest}
-        />
-      )}
-    </div>
-  );
+function CurrencyInput({ value, onChange, label, labelShort, placeholder, disabled,
+  inlineLabel, required, error, asString = false, inputRef, className, style, ...rest }) {
+  const title = inlineLabel || labelShort;
+  const handleChange = (event) => {
+    const input = event.target;
+    const count = digits(input.value.slice(0, input.selectionStart)).length;
+    const cleaned = digits(input.value);
+    onChange?.(cleaned ? asString ? cleaned : Number(cleaned) : "");
+    requestAnimationFrame(() => {
+      if (!input.isConnected) return;
+      let position = 0, seen = 0;
+      while (position < input.value.length && seen < count) {
+        if (/\d/.test(input.value[position])) seen++;
+        position++;
+      }
+      input.setSelectionRange(position, position);
+    });
+  };
+  const input = <Styled as="input" css={styles} {...rest} ref={inputRef} type="text"
+    className={`${title ? styles.inputInline : styles.input} ${error ? styles.error : ""} ${className || ""}`} style={style}
+    value={format(digits(value))} onChange={handleChange} placeholder={placeholder}
+    disabled={disabled} aria-required={required} aria-invalid={Boolean(error)} inputMode="numeric" dir="ltr" />;
+  return <Styled css={styles} className={styles.container}>
+    {label && !title && <Styled as="label" css={styles} className={styles.label}>{label}</Styled>}
+    {title ? <Styled css={styles} className={`${styles.inlineWrap} ${disabled ? styles.disabled : ""} ${error ? styles.error : ""}`}>
+      <Styled as="span" css={styles} className={styles.inlineLabel}>{title}
+        {required && <Styled as="span" css={styles} className={styles.inlineRequiredMark}>*</Styled>}
+      </Styled>{input}
+    </Styled> : input}
+  </Styled>;
 }
+export default withAppearance(CurrencyInput);

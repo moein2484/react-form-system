@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { Styled, withAppearance } from "../core/Appearance";
 import { useFormContext } from "../core/FormProvider";
-import { Controller } from "react-hook-form";
+import Controller from "../core/FieldController";
 import TimePickerTrigger from "../TimePicker/TimePickerTrigger";
 import styles from "./Field.module.css";
-
-export default function FormTime({
+function FormTime({
   name,
   label,
   labelShort,
@@ -18,51 +17,28 @@ export default function FormTime({
   className,
   ...rest
 }) {
-  const { control } = useFormContext();
-
+  const {
+    control
+  } = useFormContext();
   if (!control) {
     throw new Error("FormTime must be used within a Form");
   }
-
   const rules = {};
-  
-  if (required) {
-    rules.required = requiredMessage;
-  }
-  
   if (validate) {
     rules.validate = validate;
   }
-
   const title = labelShort || label;
   const inline = Boolean(labelShort);
-
-  return (
-    <Controller
-      name={name}
-      control={control}
-      rules={rules}
-      render={({ field, fieldState }) => (
-        <div className={styles.fieldContainer} data-form-field={name}>
-          {title && !inline && (
-            <label className={styles.label}>
+  return <Controller required={required} requiredMessage={requiredMessage} name={name} control={control} rules={rules} render={({
+    field,
+    fieldState
+  }) => <Styled as="div" css={styles} className={styles.fieldContainer} data-form-field={name}>
+          {title && !inline && <Styled as="label" css={styles} className={styles.label}>
               {title}
-              {required && <span className={styles.required}>*</span>}
-            </label>
-          )}
-          <TimePickerTrigger
-            value={field.value || "08:00"}
-            onChange={field.onChange}
-            disabled={disabled}
-            inlineLabel={inline ? title : undefined}
-            required={required}
-            {...rest}
-          />
-          {fieldState.error && (
-            <span className={styles.errorMessage}>{fieldState.error.message}</span>
-          )}
-        </div>
-      )}
-    />
-  );
+              {required && <Styled as="span" css={styles} className={styles.required}>*</Styled>}
+            </Styled>}
+          <TimePickerTrigger placeholder={placeholder} className={className} onBlur={field.onBlur} inputRef={field.ref} name={field.name} value={field.value ?? ""} onChange={field.onChange} disabled={disabled} inlineLabel={inline ? title : undefined} required={required} {...rest} />
+          {fieldState.error && <Styled as="span" css={styles} role="alert" className={styles.errorMessage}>{fieldState.error.message}</Styled>}
+        </Styled>} />;
 }
+export default withAppearance(FormTime);

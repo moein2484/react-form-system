@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { z } from "zod";
+import Link from "next/link";
 import {
   Form,
   FormInput,
@@ -23,6 +23,114 @@ import {
   FormSubmit,
 } from "../component/myForm";
 import styles from "./FormDemos.module.css";
+
+// Each example supplies its own public styling props. The visible code below is
+// generated from these same props so the example and its instructions stay in sync.
+const customizationExamples = [
+  {
+    title: "FormInput", component: FormInput, value: "",
+    props: { label: "متن سفارشی", className: styles.demoControl, style: { minHeight: 48 },
+      classNames: { label: styles.demoLabel }, styles: { errorMessage: { color: "#be123c", padding: 8, background: "#fff1f2" } } },
+  },
+  {
+    title: "FormNumber", component: FormNumber, value: 25,
+    props: { labelShort: "تعداد", min: 0,
+      styles: { inlineWrap: { borderRadius: 16, borderColor: "#7c3aed" }, inlineLabel: { background: "#ede9fe", color: "#6d28d9" }, inputInline: { background: "#faf5ff", fontSize: 18 } } },
+  },
+  {
+    title: "FormEmail", component: FormEmail, value: "",
+    props: { label: "ایمیل سفارشی", placeholder: "demo@example.com", className: styles.demoControl,
+      style: { direction: "ltr", textAlign: "left" }, styles: { label: { color: "#0f766e" }, errorMessage: { color: "#be123c" } } },
+  },
+  {
+    title: "FormPassword", component: FormPassword, value: "",
+    props: { label: "رمز سفارشی", minLength: 4,
+      styles: { input: { background: "#fff7ed", borderRadius: 14, paddingLeft: 52 }, passwordToggle: { opacity: 1, background: "#ffedd5", borderRadius: 8, padding: 4 } } },
+  },
+  {
+    title: "FormCurrency", component: FormCurrency, value: 1200000,
+    props: { label: "مبلغ با لیبل بالا", showPriceWords: true, className: styles.demoControl,
+      style: { minHeight: 50 }, styles: { wording: { color: "#0f766e", fontWeight: 700 }, label: { color: "#0f766e" } } },
+  },
+  {
+    title: "FormCurrency — labelShort", component: FormCurrency, value: 450000,
+    props: { labelShort: "تومان", showPriceWords: true,
+      styles: { inlineWrap: { borderRadius: 18, borderColor: "#0f766e" }, inlineLabel: { background: "#ccfbf1", color: "#115e59" }, inputInline: { background: "#f0fdfa", minHeight: 50, fontSize: 18 }, wording: { color: "#0f766e" } } },
+  },
+  {
+    title: "FormPercentage", component: FormPercentage, value: 25,
+    props: { label: "درصد سفارشی",
+      styles: { input: { borderRadius: 14, background: "#eff6ff", borderColor: "#2563eb" }, percentageSymbol: { color: "#2563eb", fontSize: 20 } } },
+  },
+  {
+    title: "FormDate", component: FormDate, value: "",
+    props: { label: "تاریخ سفارشی", className: styles.demoControl,
+      classNames: { calendar: styles.demoCalendar }, styles: { input: { minHeight: 48 }, label: { color: "#7c3aed" } } },
+  },
+  {
+    title: "FormTime", component: FormTime, value: "09:30",
+    props: { label: "ساعت سفارشی",
+      styles: { button: { background: "#f5f3ff", borderColor: "#7c3aed", borderRadius: 16 }, paper: { background: "#faf5ff", borderRadius: 12 }, active: { background: "#7c3aed" }, confirmButton: { background: "#7c3aed" }, cancelButton: { color: "#7c3aed" } } },
+  },
+  {
+    title: "FormSelect", component: FormSelect, value: "",
+    props: { label: "انتخاب‌گر سفارشی", searchable: true,
+      options: [{ value: "tehran", label: "تهران" }, { value: "shiraz", label: "شیراز" }],
+      classNames: { optionItem: styles.demoOption },
+      styles: { selectContainer: { background: "#f0fdfa", borderColor: "#0f766e", borderRadius: 16 }, dropdown: { background: "#f0fdfa", border: "2px solid #0f766e", borderRadius: 16 }, searchInput: { borderColor: "#0f766e" }, selected: { background: "#99f6e4" } } },
+  },
+  {
+    title: "FormSelect — multiple", component: FormSelect, value: ["tehran"],
+    props: { label: "چند انتخابی سفارشی", multiple: true, searchable: true,
+      options: [{ value: "tehran", label: "تهران" }, { value: "shiraz", label: "شیراز" }],
+      styles: { selectContainer: { borderColor: "#7c3aed" }, chip: { background: "#ede9fe", color: "#6d28d9", borderRadius: 6 }, chipRemove: { color: "#be123c", background: "#ffe4e6" }, checkMarkActive: { background: "#7c3aed", borderColor: "#7c3aed" } } },
+  },
+  {
+    title: "FormRadio", component: FormRadio, value: "basic",
+    props: { label: "گزینه‌های سفارشی", options: [{ value: "basic", label: "پایه" }, { value: "pro", label: "پیشرفته" }],
+      styles: { radioContainer: { flexDirection: "column", gap: 12 }, radioOption: { padding: 12, background: "#f5f3ff", borderRadius: 12 }, radioInput: { width: 20, height: 20, accentColor: "#7c3aed" } } },
+  },
+  {
+    title: "FormCheckbox", component: FormCheckbox, value: false,
+    props: { label: "تأیید نمونه", styles: { checkboxContainer: { padding: 14, background: "#f0fdfa", borderRadius: 12 }, checkboxInput: { width: 22, height: 22, accentColor: "#0f766e" }, label: { color: "#115e59", marginBottom: 0 } } },
+  },
+  {
+    title: "FormSwitch", component: FormSwitch, value: false,
+    props: { label: "سوییچ سفارشی", className: styles.demoSwitch,
+      styles: { switchContainer: { padding: 14, background: "#f5f3ff", borderRadius: 12 }, label: { color: "#6d28d9", marginBottom: 0 } } },
+  },
+  {
+    title: "FormTextarea", component: FormTextarea, value: "",
+    props: { label: "توضیحات سفارشی", rows: 3, resize: "vertical", className: styles.demoControl,
+      styles: { textarea: { minHeight: 110, lineHeight: 2 }, label: { color: "#0f766e" } } },
+  },
+  {
+    title: "FormFileUpload", component: FormFileUpload, value: null,
+    props: { label: "فایل سفارشی", dragText: "فایل را انتخاب کنید", className: styles.demoDropzone,
+      styles: { icon: { color: "#0f766e", background: "#ccfbf1" }, fileItem: { background: "#f0fdfa", borderColor: "#0f766e" }, removeBtn: { color: "#be123c" } } },
+  },
+  {
+    title: "FormFileUploadMultiple", component: FormFileUploadMultiple, value: [],
+    props: { label: "چند فایل سفارشی", styles: { dropzone: { borderRadius: 18, borderColor: "#7c3aed", background: "#faf5ff" }, fileList: { padding: 0, gap: 12 }, fileItem: { background: "#f5f3ff", borderRadius: 12 }, fileName: { color: "#6d28d9" }, removeBtn: { background: "#ffe4e6" } } },
+  },
+];
+
+function customizationCode(example, index) {
+  const componentName = example.title.split(" — ")[0];
+  const props = { name: `custom${index}`, ...example.props, required: true, requiredMessage: "این نمونه را تکمیل کنید" };
+  const lines = Object.entries(props).map(([key, value]) => {
+    if (value === true) return `  ${key}`;
+    if (typeof value === "string") {
+      const cssKey = Object.keys(styles).find((name) => styles[name] === value);
+      return cssKey ? `  ${key}={styles.${cssKey}}` : `  ${key}=${JSON.stringify(value)}`;
+    }
+    if (key === "classNames") {
+      return `  classNames={{ ${Object.entries(value).map(([slot, cssClass]) => `${slot}: styles.${Object.keys(styles).find((name) => styles[name] === cssClass)}`).join(", ")} }}`;
+    }
+    return `  ${key}={${JSON.stringify(value, null, 2).replace(/\n/g, "\n  ")}}`;
+  });
+  return `<${componentName}\n${lines.join("\n")}\n/>`;
+}
 
 const provinces = [
   { id: "tehran", name: "تهران" },
@@ -93,16 +201,6 @@ const initialProjects = [
   { id: "p2", name: "پروژه بتا" },
 ];
 
-const nationalCodeSchema = z.object({
-  nationalCode: z.string().min(10, "کد ملی باید ۱۰ رقم باشد"),
-  postalCode: z.string().min(10, "کد پستی باید ۱۰ رقم باشد"),
-});
-
-const priceWordsSchema = z.object({
-  amount: z.string().min(4, "مبلغ باید حداقل ۴ رقم باشد"),
-  amountLegacy: z.string().min(4, "مبلغ باید حداقل ۴ رقم باشد"),
-});
-
 function FormCard({ title, description, children }) {
   return (
     <section className={styles.card}>
@@ -161,12 +259,44 @@ export default function FormDemos() {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
+        <a href="#customization-examples">نمونهٔ سفارشی‌سازی هر ورودی همراه کد</a>
+        <Link href="/playground">آزمایش همهٔ فیلدها، required و استایل سفارشی</Link>
         <h1 className={styles.title}>سیستم فرم اختصاصی (myForm)</h1>
         <p className={styles.subtitle}>
           دموی کامل تمام اینپوت‌ها — روی دکمه submit هر فرم بزنید و نتیجه را در
           Console ببینید
         </p>
       </header>
+
+      <section id="customization-examples" className={styles.customizationSection}>
+        <h2>سفارشی‌سازی هر ورودی</h2>
+        <p>هر نمونه یک فرم مستقل است. کد زیر آن، پراپ‌های همان نمونه را نشان می‌دهد. className و style برای کنترل اصلی، و classNames و styles برای بخش‌های داخلی هستند.</p>
+        <details className={styles.codeDetails}>
+          <summary>CSS مشترک مثال‌ها</summary>
+          <pre className={styles.codeBlock}><code>{`.demoControl { border: 2px solid #0f766e; border-radius: 14px; background: #f0fdfa; color: #115e59; }
+.demoControl:focus { border-color: #115e59; box-shadow: 0 0 0 3px #99f6e4; }
+.demoLabel { color: #0f766e; font-weight: 800; }
+.demoOption:hover { background: #ccfbf1; }
+.demoSwitch { background: #ddd6fe; }
+.demoSwitch:checked { background: #7c3aed; }
+.demoSwitch::before { background: #faf5ff; }
+.demoDropzone { border: 2px dashed #0f766e; border-radius: 18px; background: #f0fdfa; }
+.demoCalendar :global(.rmdp-header) { background: #7c3aed; }
+.demoCalendar :global(.rmdp-day.rmdp-selected span) { background: #7c3aed; }`}</code></pre>
+        </details>
+        {customizationExamples.map((example, index) => (
+          <FormCard key={example.title} title={`سفارشی‌سازی ${example.title}`} description="ظاهر زنده + کد استفاده؛ برای مشاهدهٔ پیام خطا مقدار را خالی کنید و ثبت بزنید.">
+            <Form type={formType} onSubmit={logSubmit(example.title)} defaultValues={{ [`custom${index}`]: example.value }}>
+              <example.component name={`custom${index}`} {...example.props} required requiredMessage="این نمونه را تکمیل کنید" />
+              <FormActions submitText={`ثبت نمونه ${index + 1}`} />
+            </Form>
+            <details className={styles.codeDetails}>
+              <summary>کد {example.title}</summary>
+              <pre className={styles.codeBlock}><code>{customizationCode(example, index)}</code></pre>
+            </details>
+          </FormCard>
+        ))}
+      </section>
 
       {/* کنترل نوع فرم */}
       <div className={styles.settings}>
@@ -223,7 +353,7 @@ export default function FormDemos() {
         <Form
           type={formType}
           onSubmit={logSubmit("Searchable")}
-          defaultValues={{ city: [] }}
+          defaultValues={{ city: "" }}
         >
           <FormSelect
             name="city"
@@ -244,7 +374,7 @@ export default function FormDemos() {
       {/* ====== FormSelect چند انتخابی ====== */}
       <FormCard
         title="۳) FormSelect چند انتخابی (multi)"
-        description="با پراپ multiple — موارد انتخاب‌شده به‌صورت چیپ زیر اینپوت نمایش داده می‌شوند"
+        description="با پراپ multiple — موارد انتخاب‌شده به‌صورت چیپ داخل اینپوت نمایش داده می‌شوند"
       >
         <Form
           type={formType}
@@ -1031,10 +1161,9 @@ export default function FormDemos() {
       {/* ====== FormNumber خروجی رشته ====== */}
       <FormCard
         title="۲۹) FormNumber — خروجی رشته‌ای (asString)"
-        description="برای فیلدهایی مثل کد ملی که در schema از نوع string هستند. بدون asString خروجی number است و با z.string() خطای «Expected string, received number» می‌دهد؛ با asString مقدار رشته می‌شود و با minLength چک می‌شود"
+        description="با asString خروجی رشته‌ای است؛ الزام با required و طول با minLength و maxLength کنترل می‌شود."
       >
         <Form
-          schema={nationalCodeSchema}
           type={formType}
           onSubmit={logSubmit("AsString")}
           defaultValues={{ nationalCode: "", postalCode: "" }}
@@ -1176,10 +1305,9 @@ export default function FormDemos() {
 
       <FormCard
         title="۳۲) FormCurrency — خروجی رشته‌ای (asString)"
-        description="بدون asString مقدار به صورت number ذخیره می‌شود و با schema ای که فیلد را z.string() تعریف کرده، خطای «Expected string, received number» می‌دهد. با asString مقدار string می‌شود (بدون جداکننده) و min/max و minLength درست کار می‌کنند — فیلد اول asString دارد، فیلد دوم همان مبلغ را بدون asString نشان می‌دهد"
+        description="فیلد اول رشتهٔ بدون جداکننده و فیلد دوم عدد برمی‌گرداند. اعتبارسنجی هر دو فقط از پراپ‌های فیلد انجام می‌شود."
       >
         <Form
-          schema={priceWordsSchema}
           type={formType}
           onSubmit={logSubmit("CurrencyAsString")}
           defaultValues={{ amount: "", amountLegacy: "" }}

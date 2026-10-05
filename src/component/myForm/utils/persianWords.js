@@ -88,7 +88,7 @@ export function numberToPersianWords(num) {
 
   const value = typeof num === "string" ? Number(num.replace(/,/g, "")) : Number(num);
 
-  if (isNaN(value)) return "";
+  if (!Number.isFinite(value)) return "";
 
   if (value === 0) return "صفر";
 

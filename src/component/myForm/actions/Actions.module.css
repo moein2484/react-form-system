@@ -5,6 +5,8 @@
   direction: rtl;
 }
 
+.disabled { cursor: not-allowed; }
+
 .submitButton {
   padding: 11px 26px;
   background: var(--form-success, #4caf50);

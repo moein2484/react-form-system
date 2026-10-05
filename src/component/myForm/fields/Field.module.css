@@ -1,6 +1,7 @@
 .fieldContainer {
   margin-bottom: 16px;
   direction: rtl;
+  font-family: var(--font-fa, Tahoma, sans-serif);
 }
 
 .label {

@@ -13,6 +13,13 @@
   transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
+.uploadError {
+  color: var(--form-error, #d32f2f);
+  font-size: 0.75rem;
+  position: relative;
+  z-index: 4;
+}
+
 .dropzone:hover {
   border-color: var(--form-primary, #1976d2);
   background: var(--form-primary-light, #e3f2fd);
@@ -414,6 +421,8 @@
   display: block;
   z-index: 1;
 }
+
+.avatarContainer { position: absolute; inset: 0; }
 
 /* حلقه پیشرفت/اسپینر روی آواتار */
 .avatarOverlay {

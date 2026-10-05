@@ -1,10 +1,10 @@
 "use client";
 
+import { Styled, withAppearance } from "../core/Appearance";
 import { useFormContext } from "../core/FormProvider";
-import { Controller } from "react-hook-form";
+import Controller from "../core/FieldController";
 import styles from "./Field.module.css";
-
-export default function FormCheckbox({
+function FormCheckbox({
   name,
   label,
   required = false,
@@ -14,52 +14,28 @@ export default function FormCheckbox({
   className,
   ...rest
 }) {
-  const { control } = useFormContext();
-
+  const {
+    control
+  } = useFormContext();
   if (!control) {
     throw new Error("FormCheckbox must be used within a Form");
   }
-
   const rules = {};
-  
-  if (required) {
-    rules.required = requiredMessage;
-  }
-  
   if (validate) {
     rules.validate = validate;
   }
-
-  return (
-    <Controller
-      name={name}
-      control={control}
-      rules={rules}
-      render={({ field, fieldState }) => (
-        <div className={styles.fieldContainer} data-form-field={name}>
-          <div className={styles.checkboxContainer}>
-            <input
-              {...field}
-              type="checkbox"
-              id={name}
-              disabled={disabled}
-              className={`${styles.checkboxInput} ${className || ""}`}
-              checked={field.value || false}
-              onChange={(e) => field.onChange(e.target.checked)}
-              {...rest}
-            />
-            {label && (
-              <label htmlFor={name} className={styles.label}>
+  return <Controller required={required} requiredMessage={requiredMessage} boolean name={name} control={control} rules={rules} render={({
+    field,
+    fieldState
+  }) => <Styled as="div" css={styles} className={styles.fieldContainer} data-form-field={name}>
+          <Styled as="div" css={styles} className={styles.checkboxContainer}>
+            <Styled as="input" css={styles} {...field} type="checkbox" id={name} disabled={disabled} className={`${styles.checkboxInput} ${className || ""}`} checked={field.value || false} onChange={e => field.onChange(e.target.checked)} {...rest} />
+            {label && <Styled as="label" css={styles} htmlFor={name} className={styles.label}>
                 {label}
-                {required && <span className={styles.required}>*</span>}
-              </label>
-            )}
-          </div>
-          {fieldState.error && (
-            <span className={styles.errorMessage}>{fieldState.error.message}</span>
-          )}
-        </div>
-      )}
-    />
-  );
+                {required && <Styled as="span" css={styles} className={styles.required}>*</Styled>}
+              </Styled>}
+          </Styled>
+          {fieldState.error && <Styled as="span" css={styles} role="alert" className={styles.errorMessage}>{fieldState.error.message}</Styled>}
+        </Styled>} />;
 }
+export default withAppearance(FormCheckbox);

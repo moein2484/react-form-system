@@ -2,12 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider } from "./FormProvider";
 
 export default function Form({
   children,
-  schema,
+  schema: _legacySchema,
+  resolver: _legacyResolver,
   type = "normal",
   validationMode = "onBlur",
   onSubmit,
@@ -16,18 +16,14 @@ export default function Form({
   id,
   ...rest
 }) {
-  // اگر schema ارائه شد، از آن استفاده می‌کنیم
-  // در غیر این صورت، از validation در سطح Field استفاده می‌شود
-  const resolver = schema ? zodResolver(schema) : undefined;
-
   const formMethods = useForm({
-    resolver,
     defaultValues,
-    mode: validationMode,
-    reValidateMode: validationMode,
+    mode: type === "strict" ? "onChange" : validationMode,
+    reValidateMode: type === "strict" ? "onChange" : validationMode,
+    shouldFocusError: false,
   });
 
-  const { handleSubmit, formState, control, reset, setValue, getValues, watch } = formMethods;
+  const { handleSubmit, formState, control, reset, setValue, getValues, watch, trigger } = formMethods;
 
   const formRef = useRef(null);
 
@@ -37,7 +33,9 @@ export default function Form({
     if (!el) return;
     const errorCount = Object.keys(formState.errors).length;
     el.dataset.formErrors = String(errorCount);
-    el.dataset.formValid = String(errorCount === 0);
+    el.dataset.formValid = String(formState.isValid);
+    el.dataset.formType = type;
+    el.resetForm = reset;
     el.dataset.formSubmitting = String(Boolean(formState.isSubmitting));
     if (id) {
       window.dispatchEvent(
@@ -45,28 +43,32 @@ export default function Form({
           detail: {
             formId: id,
             hasErrors: errorCount > 0,
+            valid: formState.isValid,
+            type,
             submitting: Boolean(formState.isSubmitting),
           },
         }),
       );
     }
-  }, [formState, id]);
+    return () => { delete el.resetForm; };
+  }, [formState, id, type, reset]);
 
   const formType = type;
 
   const scrollToFirstError = (errors) => {
-    const firstKey = Object.keys(errors || {})[0];
-    if (!firstKey) return;
-    const escape = typeof CSS !== "undefined" && CSS.escape ? CSS.escape : (s) => s;
-    const el = document.querySelector(`[data-form-field="${escape(firstKey)}"]`);
+    const fields = formRef.current?.querySelectorAll("[data-form-field]") || [];
+    const el = Array.from(fields).find((node) => {
+      const path = node.dataset.formField.replace(/\[(\d+)\]/g, ".$1").split(".");
+      return path.reduce((value, key) => value?.[key], errors);
+    });
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "center" });
-      const focusable = el.querySelector("input, select, textarea, button");
+      const focusable = el.querySelector('input:not([type="hidden"]):not([type="file"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), button:not(:disabled), [tabindex="0"]');
       focusable?.focus?.({ preventScroll: true });
     }
   };
 
-  const submitHandler = handleSubmit(
+  const submitHandler = (event) => handleSubmit(
     async (data) => {
       if (onSubmit) {
         await onSubmit(data);
@@ -78,7 +80,7 @@ export default function Form({
         scrollToFirstError(errors);
       }
     },
-  );
+  )(event);
 
   return (
     <FormProvider
@@ -91,8 +93,9 @@ export default function Form({
       setValue={setValue}
       getValues={getValues}
       watch={watch}
+      trigger={trigger}
     >
-      <form id={id} ref={formRef} onSubmit={submitHandler} className={className} {...rest}>
+      <form {...rest} id={id} ref={formRef} onSubmit={submitHandler} className={className} noValidate>
         {children}
       </form>
     </FormProvider>

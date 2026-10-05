@@ -5,6 +5,22 @@
   direction: rtl;
 }
 
+.customizationSection { margin: 28px 0; scroll-margin-top: 20px; }
+.customizationSection > p { color: #546e7a; line-height: 1.9; }
+.codeDetails { margin: 18px 0; }
+.codeDetails summary { cursor: pointer; color: #0f766e; font-weight: 600; }
+.codeBlock { direction: ltr; text-align: left; overflow-x: auto; padding: 16px; border-radius: 10px; background: #0f172a; color: #e2e8f0; font: 13px/1.8 monospace; white-space: pre; }
+.demoControl { border: 2px solid #0f766e; border-radius: 14px; background: #f0fdfa; color: #115e59; }
+.demoControl:focus { border-color: #115e59; box-shadow: 0 0 0 3px #99f6e4; }
+.demoLabel { color: #0f766e; font-weight: 800; }
+.demoOption:hover { background: #ccfbf1; }
+.demoSwitch { background: #ddd6fe; }
+.demoSwitch:checked { background: #7c3aed; }
+.demoSwitch::before { background: #faf5ff; }
+.demoDropzone { border: 2px dashed #0f766e; border-radius: 18px; background: #f0fdfa; }
+.demoCalendar :global(.rmdp-header) { background: #7c3aed; }
+.demoCalendar :global(.rmdp-day.rmdp-selected span) { background: #7c3aed; }
+
 .header {
   text-align: center;
   margin-bottom: 28px;

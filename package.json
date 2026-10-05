@@ -6,10 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.9.1",
     "dayjs": "^1.11.23",
     "framer-motion": "^13.1.1",
     "mongoose": "^9.9.1",
@@ -18,7 +18,7 @@
     "react-dom": "19.2.8",
     "react-hook-form": "^7.87.0",
     "react-multi-date-picker": "^4.5.2",
-    "zod": "^4.5.4"
+    "react-date-object": "^2.1.9"
   },
   "devDependencies": {
     "babel-plugin-react-compiler": "1.0.0",

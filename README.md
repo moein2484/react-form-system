@@ -1,6 +1,6 @@
 # سیستم فرم اختصاصی (myForm)
 
-یک کتابخانه کامپوننت فرم فارسی/راست‌چین قابل استفاده مجدد، ساخته‌شده با **Next.js / React** و **react-hook-form** و **Zod**.
+یک کتابخانه کامپوننت فرم فارسی/راست‌چین قابل استفاده مجدد، ساخته‌شده با **Next.js / React** و **react-hook-form** .
 
 این سیستم شامل مجموعه‌ای از اینپوت‌های آماده است که می‌توانید برای ساخت فرم در هر پروژه‌ای از آن‌ها استفاده کنید. تمام فرم‌های مثال در صفحه اصلی (`/`) قرار دارند؛ با کلیک روی دکمه submit هر فرم، مقدار فیلدها در Console مرورگر لاگ می‌شود.
 
@@ -42,7 +42,8 @@
 
 - ✅ تمام اینپوت‌ها راست‌چین و فارسی
 - ✅ یکپارچه با **react-hook-form** (اعتبارسنجی در سطح فیلد)
-- ✅ پشتیبانی از **Zod schema** برای اعتبارسنجی پیشرفته
+- ✅ اعتبارسنجی مستقل در هر فیلد؛ الزام فقط با `required` و پیام آن با `requiredMessage`
+- ✅ شخصی‌سازی تمام بخش‌ها با `className`، `style`، `classNames`، `styles` و `unstyled`
 - ✅ دو حالت فرم: **Normal** و **Strict**
 - ✅ اسکرول خودکار به اولین فیلد خطادار (در حالت Normal)
 - ✅ تاریخ شمسی با ذخیره میلادی
@@ -57,7 +58,7 @@
 
 پیش‌نیازها:
 
-- Node.js نسخه 18 یا بالاتر
+- Node.js نسخه 20.9 یا بالاتر
 - یک پروژه Next.js (نسخه 16 به بالا توصیه می‌شود)
 
 ```bash
@@ -75,6 +76,8 @@ npm run dev
 ## استفاده سریع
 
 ```jsx
+"use client";
+
 import {
   Form,
   FormInput,
@@ -124,8 +127,7 @@ export default function Example() {
 |------|-----|---------|-------|
 | `onSubmit` | `(data) => void` | – | تابعی که بعد از ارسال موفق با مقادیر فرم صدا زده می‌شود |
 | `defaultValues` | `object` | `{}` | مقادیر اولیه فیلدها |
-| `schema` | `ZodSchema` | – | در صورت ارائه، اعتبارسنجی با Zod انجام می‌شود |
-| `type` | `"normal" \| "strict"` | `"normal"` | `strict`: دکمه submit تا پر شدن کامل غیرفعال است |
+| `type` | `"normal" \| "strict"` | `"normal"` | `strict`: دکمه‌های داخلی و خارجی تا معتبر شدن فیلدها غیرفعال‌اند؛ اعتبارسنجی با هر تغییر انجام می‌شود |
 | `validationMode` | `"onBlur" \| "onChange" \| "onSubmit"` | `"onBlur"` | زمان انجام اعتبارسنجی |
 | `className` | `string` | – | کلاس سفارشی روی تگ `form` |
 
@@ -169,7 +171,10 @@ export default function Example() {
 | `requiredMessage` | `string` | پیام خطای الزامی بودن |
 | `validate` | `(value) => true \| string` | تابع اعتبارسنجی سفارشی |
 | `disabled` | `boolean` | غیرفعال بودن |
-| `className` | `string` | کلاس سفارشی |
+| `className` / `style` | `string` / `CSSProperties` | کلاس و استایل کنترل اصلی؛ در Radio روی گروه گزینه‌ها و در آپلود روی دراپ‌زون |
+| `classNames` | `Record<string, string>` | کلاس سفارشی هر بخش داخلی |
+| `styles` | `Record<string, CSSProperties>` | استایل inline هر بخش داخلی |
+| `unstyled` | `boolean` | حذف کلاس‌های پیش‌فرض myForm و حفظ کلاس‌ها و استایل‌های سفارشی |
 
 ### حالت لیبل short (`labelShort`)
 
@@ -195,7 +200,7 @@ export default function Example() {
 
 فقط `FormRadio`، `FormCheckbox` و `FormSwitch` به‌صورت block باقی مانده‌اند و هنوز از `labelShort` پشتیبانی نمی‌کنند (در این کامپوننت‌ها از `label` استفاده کنید).
 
-همه فیلدها از `react-hook-form` استفاده می‌کنند و باید داخل `<Form>` باشند در غیر این صورت خطا می‌دهند.
+همه فیلدهای `Form*` از `react-hook-form` استفاده می‌کنند و باید داخل `<Form>` باشند در غیر این صورت خطا می‌دهند.
 
 ---
 
@@ -220,7 +225,7 @@ export default function Example() {
 
 ### 2) FormNumber
 
-ورودی عددی با اعتبارسنجی عددی.
+ورودی عددی با اعتبارسنجی عددی. خروجی پیش‌فرض عدد است و با `asString` رشته برمی‌گردد. خالی‌کردن ورودی مقدار `""` می‌دهد؛ مقدار صفر معتبر است. در حالت رشته‌ای `minLength` و `maxLength` هم قابل استفاده‌اند.
 
 | پراپ | نوع | توضیح |
 |------|-----|-------|
@@ -253,7 +258,7 @@ export default function Example() {
 
 ### 5) FormCurrency
 
-ورودی مبلغ با کاماگذاری هزارگان (نمایش LTR). مقدار ذخیره‌شده عدد است.
+ورودی مبلغ با کاماگذاری هزارگان (نمایش LTR). مقدار ذخیره‌شده به‌صورت پیش‌فرض عدد است؛ با `asString` رشتهٔ بدون جداکننده ذخیره می‌شود.
 
 | پراپ | نوع | توضیح |
 |------|-----|-------|
@@ -292,7 +297,7 @@ export default function Example() {
 
 | پراپ | نوع | توضیح |
 |------|-----|-------|
-| `type` | `string` | در صورت `"meeting"` دکمه تمام‌عرض می‌شود |
+| `type` | `string` | حالت `"meeting"` برای سازگاری حفظ شده؛ دکمه در حالت عادی هم تمام‌عرض است |
 
 > پاپ‌آپ ساعت موقعیت خود را هنگام **اسکرول صفحه و تغییر سایز** به‌روزرسانی می‌کند و از لبه صفحه خارج نمی‌شود.
 
@@ -313,9 +318,9 @@ export default function Example() {
 | `renderSelected` | `(option) => ReactNode` | – | رندر سفارشی مقدار انتخاب‌شده |
 | `renderChip` | `(option) => ReactNode` | – | رندر سفارشی هر چیپ در چند انتخابی |
 | `addItemLabel` | `string` | – | متن دکمه «افزودن» در پایین لیست |
-| `onAddItem` | `() => void` | – | تابع کلیک دکمه افزودن |
+| `onAddItem` | `(closeDropdown) => void` | – | تابع کلیک دکمه افزودن |
 
-**مثال چند انتخابی (چیپ‌ها زیر اینپوت):**
+**مثال چند انتخابی (چیپ‌ها داخل اینپوت):**
 
 ```jsx
 <FormSelect
@@ -423,7 +428,10 @@ export default function Example() {
   required
   accept=".pdf,.jpg,.png"
   maxSize={2 * 1024 * 1024}
-  onUpload={(file) => fetch("/api/upload", { method: "POST", body: file })}
+  onUpload={async (file) => {
+    const response = await fetch("/api/upload", { method: "POST", body: file });
+    if (!response.ok) throw new Error("آپلود ناموفق");
+  }}
 />
 ```
 
@@ -479,13 +487,13 @@ export default function Example() {
 
 ### FormSubmit
 
-دکمه submit مستقل. اگر به‌تنهایی استفاده نشود، مقدار `children` به‌صورت متن دکمه رندر می‌شود.
+دکمهٔ ارسال مستقل؛ `children` متن آن را تعیین می‌کند. بیرون از فرم با `form="form-id"` به `<Form id="form-id">` متصل می‌شود. حالت Strict و وضعیت ارسال در هر دو حالت رعایت می‌شود. `FormActions` خارجی هم با همین پراپ از ارسال و بازنشانی مقادیر React Hook Form پشتیبانی می‌کند.
 
 ---
 
 ## استایل و شخصی‌سازی
 
-استایل‌ها با **CSS Modules** نوشته شده‌اند و خودفزایشی (self-contained) هستند؛ یعنی با انتقال پوشه `myForm`، استایل‌ها همراه آن اعمال می‌شوند.
+استایل‌ها با **CSS Modules** نوشته شده‌اند و با انتقال پوشه `myForm` همراه آن منتقل می‌شوند. فایل `myForm/globals.css` به‌صورت خودکار از `index.js` بارگذاری می‌شود و فقط متغیرهای تم را تعریف می‌کند؛ استایل `body` یا reset سراسری روی پروژهٔ میزبان اعمال نمی‌کند. فایل‌های فونت و `@font-face` را جداگانه منتقل کنید.
 
 **متغیرهای CSS سراسری** (تعریف‌شده در `:root`):
 
@@ -558,11 +566,8 @@ import {
 
 3. مطمئن شوید وابستگی‌های زیر نصب هستند:
    - `react-hook-form`
-   - `@hookform/resolvers`
-   - `zod` (در صورت استفاده از schema)
    - `react-multi-date-picker`
    - `react-date-object`
-   - `dayjs`
    - `framer-motion`
 
 4. تعریف `@font-face` فونت DanaFaNum (در بخش فونت بالا) و متغیرهای CSS را به پروژه خود اضافه کنید.
@@ -575,7 +580,7 @@ import {
 npm run dev
 ```
 
-صفحه اصلی (`/`) شامل ۱۷ کارت دموی مختلف است:
+صفحه اصلی (`/`) در `FormDemos` شامل ۱۷ نمونهٔ زندهٔ سفارشی‌سازی با کد JSX قابل کپی و CSS مشترک است؛ برای هر نوع ورودی نمونه وجود دارد، از جمله هر دو حالت معمولی و `labelShort` مبلغ و انتخاب‌گر چندتایی. نمونه‌ها باید داخل `Form` قرار بگیرند. صفحه `/playground` برای آزمایش همهٔ انواع فیلد، تغییر required، حالت Strict، استایل سفارشی، ارسال/بازنشانی خارجی و آپلود آزمایشی در دسترس است. تعدادی از مثال‌ها:
 
 1. FormSelect (بدون جستجو)
 2. FormSelect با جستجو
@@ -602,3 +607,82 @@ npm run dev
 ## مجوز
 
 This project is MIT licensed.
+
+## قرارداد اعتبارسنجی و مهاجرت از schema
+
+فرم هیچ وابستگی اجرایی به Zod یا resolver ندارد. تنها `required={true}` فیلد را الزامی می‌کند و متن خطای خالی‌بودن دقیقاً از `requiredMessage` می‌آید؛ پیام پیش‌فرض «این فیلد الزامی است» است. خطا زیر همان فیلد با `role="alert"` نمایش داده می‌شود. اعتبارسنجی HTML مرورگر روی فرم غیرفعال است تا پیام مرورگر جای پیام فیلد را نگیرد.
+
+- فیلد اختیاریِ خالی از سایر اعتبارسنجی‌ها عبور می‌کند، حتی اگر min، pattern یا validate داشته باشد.
+- مقدار صفر خالی نیست. رشتهٔ خالی یا فقط فاصله، null، undefined، NaN و آرایهٔ خالی، خالی محسوب می‌شوند.
+- Checkbox و Switch الزامی باید true باشند؛ false در حالت اختیاری پذیرفته می‌شود.
+- مقدار غیرخالی باید قوانین min/max، طول، الگو و validate را رعایت کند.
+- `validate(value, allValues)` می‌تواند تابع async یا مجموعه‌ای از توابع نام‌دار باشد؛ true/undefined موفقیت و string/false خطاست. برای مقدار خالی اجرا نمی‌شود.
+- در حالت normal زمان اعتبارسنجی از validationMode می‌آید (پیش‌فرض onBlur). انتخاب تاریخ، ساعت، گزینه و فایل نیز اعتبارسنجی را به‌روزرسانی می‌کند. در strict اعتبارسنجی با تغییر انجام می‌شود.
+- پراپ‌های قدیمی schema و resolver برای جلوگیری از نشت به DOM نادیده گرفته می‌شوند و هیچ قانونی از آن‌ها اعمال نمی‌شود. هنگام مهاجرت قوانین قبلی را به پراپ‌های فیلد یا validate منتقل کنید.
+
+```jsx
+<Form onSubmit={save} defaultValues={{ email: "", nickname: "", confirm: "" }}>
+  <FormEmail name="email" required requiredMessage="ایمیل را وارد کنید" />
+  <FormInput name="nickname" minLength={3} /> {/* اختیاری؛ فقط مقدار غیرخالی بررسی می‌شود */}
+  <FormInput name="confirm" required requiredMessage="تکرار را وارد کنید"
+    validate={(value, values) => value === values.nickname || "مقادیر یکسان نیستند"} />
+  <FormActions />
+</Form>
+```
+
+## شخصی‌سازی تمام بخش‌های ورودی
+
+تمام فیلدها، کنترل‌های مستقل و دکمه‌ها `classNames`، `styles` و `unstyled` دارند. کلید هر بخش همان نام کلاس در CSS Module آن است. استایل سفارشی بخش پس از استایل inline معمولی اعمال می‌شود. کلاس سفارشی به کلاس پایه اضافه می‌شود؛ برای hover/focus، pseudo-elementها و رسانه‌ها از CSS استفاده کنید. برای حذف کامل کلاس‌های پایه، unstyled را فعال کنید. این گزینه استایل داخلی کتابخانهٔ تقویم و محاسبات ضروری موقعیت پنجره‌ها را حذف نمی‌کند.
+
+| بخش | کلیدهای پرکاربرد |
+|---|---|
+| مشترک فیلدها | fieldContainer، label، required، errorMessage |
+| متن/عدد/ایمیل/رمز/درصد | input، inputInline، inlineWrap، inlineLabel، inlineRequiredMark، error |
+| رمز | passwordContainer، passwordToggle، passwordInlineToggle |
+| درصد | percentageContainer، percentageSymbol، inlineSymbol |
+| مبلغ | container، input، inputInline، inlineWrap، inlineLabel، wording |
+| متن چندخطی | textarea؛ ارتفاع با rows/height/minHeight/maxHeight؛ resize=false یا none برای غیرفعال‌کردن تغییر اندازه |
+| انتخاب‌گر | formControl، selectContainer، dropdown، searchInput، optionsContainer، optionItem، selected، chip، chipRemove، placeholderText، arrowIcon، addItemButton |
+| تاریخ | input، inputInline، dateInputWrap، inlineWrap، label، error؛ classNames.calendar برای کل تقویم؛ classNames/styles.datePickerContainer برای ظرف کتابخانه |
+| ساعت | button، buttonInline، popper، paper، columnsContainer، itemButton، active، confirmButton، cancelButton |
+| رادیو/چک‌باکس/سوییچ | radioContainer، radioOption، radioInput، checkboxContainer، checkboxInput، switchContainer، switchInput |
+| فایل/آواتار | dropzone، dragging، avatar، icon، dragText، dragHint، fileList، fileItem، fileName، removeBtn، spinner، previewImg، avatarPreview، uploadError |
+| دکمه‌ها | actionsContainer، submitButton، resetButton، submitButtonError، disabled |
+
+این جدول خلاصه است؛ همهٔ کلیدهای CSS Module هر کنترل قابل استفاده‌اند. عناصر دارای `data-slot` هستند تا بخش‌ها در ابزار توسعه قابل تشخیص باشند. تنظیمات به کنترل‌های داخلی و portalها منتقل می‌شوند؛ بنابراین نیازی به انتخابگر فرزندِ فرم برای پنجرهٔ خارج از فرم نیست.
+
+```jsx
+<FormSelect name="city" label="شهر" options={cities}
+  valueKey="id" labelKey="name" searchable
+  required requiredMessage="شهر را انتخاب کنید"
+  className={myStyles.control}
+  style={{ minHeight: 48 }}
+  classNames={{ label: myStyles.label, dropdown: myStyles.dropdown, optionItem: myStyles.option }}
+  styles={{
+    fieldContainer: { marginBottom: 24 },
+    selectContainer: { background: "#f5f3ff", borderRadius: 16 },
+    errorMessage: { color: "#be123c", paddingTop: 4 },
+    chip: { background: "#ede9fe" },
+  }}
+/>
+```
+
+```jsx
+<FormInput name="title" unstyled
+  classNames={{ input: myStyles.input, label: myStyles.label }}
+  styles={{ fieldContainer: { display: "grid", gap: 8 } }} />
+```
+
+تقویم: `className/style` روی input اعمال می‌شود؛ `calendarClassName` یا `classNames.calendar` را برای ظاهر تقویم و انتخابگرهای داخلی `.rmdp-*` به‌کار ببرید. `datePickerProps` برای تنظیمات اضافی react-multi-date-picker در دسترس است؛ مقدار، تقویم فارسی و اتصال فرم توسط کامپوننت مدیریت می‌شوند.
+
+آپلود: `size="sm|md|lg"` و `variant="avatar"` پشتیبانی می‌شوند. فایل با نوع یا حجم نامعتبر به onUpload فرستاده نمی‌شود. شکست Promise با uploadErrorText (پیش‌فرض «بارگذاری ناموفق بود») نمایش داده می‌شود. وضعیت آپلود از اعتبارسنجی فرم جداست؛ submit منتظر آپلود نمی‌ماند و مقدار فیلد همچنان File/File[] است.
+
+## بررسی پروژه
+
+```bash
+npm test
+npm run lint
+npm run build
+```
+
+برای بررسی تعاملی، /playground را باز کنید: فرم خالی الزامی باید برای همهٔ فیلدها پیام اختصاصی بدهد؛ فرم اختیاری خالی باید ارسال شود؛ صفر باید حفظ شود؛ دکمه‌های داخلی و خارجی در Strict باید یکسان عمل کنند؛ استایل سفارشی باید روی کنترل‌ها و پنجره‌های بازشونده دیده شود.
